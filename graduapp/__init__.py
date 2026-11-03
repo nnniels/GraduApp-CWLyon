@@ -4,7 +4,12 @@ from .config import Config
 
 
 def create_app(config: dict | None = None) -> Flask:
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(
+        __name__,
+        instance_relative_config=True,
+        template_folder="web/templates",
+        static_folder="web/static",
+    )
     app.config.from_object(Config)
     if config:
         app.config.update(config)
