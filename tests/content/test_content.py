@@ -105,6 +105,13 @@ def test_bad_location():
     assert "location" in break_it(lambda d: d["steps_raw"][1]["location"].pop("lat"))
 
 
+def test_javascript_url_is_rejected():
+    msg = break_it(
+        lambda d: d["steps_raw"][1].update(location={"kind": "maps_link", "url": "javascript:alert(1)"})
+    )
+    assert "http" in msg
+
+
 def test_errors_are_collected():
     def mutate(d):
         d["steps_raw"][0]["challenges"]["k"] = 9

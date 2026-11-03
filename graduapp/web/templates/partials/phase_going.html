@@ -1,0 +1,13 @@
+<h2>Go to this location</h2>
+{% if location.kind == 'text' %}
+  <p class="location">{{ location.text }}</p>
+{% elif location.kind == 'maps_link' %}
+  {% if location.label %}<p class="location">{{ location.label }}</p>{% endif %}
+  <a class="button secondary" href="{{ location.url }}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+{% elif location.kind == 'minimap' %}
+  {% if location.label %}<p class="location">{{ location.label }}</p>{% endif %}
+  <iframe class="minimap" src="{{ location.embed }}" title="Map" loading="lazy" referrerpolicy="no-referrer"
+          sandbox="allow-scripts allow-same-origin"></iframe>
+  <a class="button secondary" href="{{ location.link }}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+{% endif %}
+<button hx-get="{{ url_for('game.arrive_form') }}" hx-disabled-elt="this">I am here</button>

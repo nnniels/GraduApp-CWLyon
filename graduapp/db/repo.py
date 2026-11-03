@@ -59,6 +59,26 @@ class TeamView:
     state: TeamState
 
 
+@dataclass(frozen=True)
+class ChallengeInfo:
+    id: str
+    text: str
+
+
+@dataclass(frozen=True)
+class StepContent:
+    """What a screen may show about a step. Deliberately has no `code` field."""
+
+    id: str
+    kind: str
+    location: dict
+    riddle_text: str | None
+    riddle_image: str | None
+    k: int
+    duration_s: int
+    challenges: tuple[ChallengeInfo, ...]
+
+
 # Time
 
 def _iso(dt: datetime) -> str:
@@ -223,6 +243,41 @@ def load_course(conn: sqlite3.Connection, itinerary_id: str) -> Course:
 
 # State
 
+def get_step_content(conn: sqlite3.Connection, step_id: str) -> StepContent:
+    s = conn.execute(
+        "SELECT id, kind, location_json, riddle_text, riddle_image, challenge_k, "
+        "challenge_duration_s FROM step WHERE id = ?",
+        (step_id,),
+    ).fetchone()
+    if s is None:
+        raise LookupError(step_id)
+    challenges = tuple(
+        ChallengeInfo(c["id"], c["text"])
+        for c in conn.execute(
+            "SELECT id, text FROM challenge WHERE step_id = ? ORDER BY position", (step_id,)
+        )
+    )
+    return StepContent(
+        s["id"], s["kind"], json.loads(s["location_json"]), s["riddle_text"], s["riddle_image"],
+        s["challenge_k"] or 0, s["challenge_duration_s"] or 0, challenges,
+    )
+
+
+def challenge_texts(conn: sqlite3.Connection, ids: list[str]) -> dict[str, str]:
+    rows = conn.execute(
+        "SELECT id, text FROM challenge WHERE id IN (SELECT value FROM json_each(?))",
+        (json.dumps(list(ids)),),
+    )
+    return {r["id"]: r["text"] for r in rows}
+
+
+def get_completion_texts(conn: sqlite3.Connection, team_id: str) -> dict[str, str]:
+    """What the team typed when ticking, by challenge id (current ticks only)."""
+    rows = conn.execute(
+        "SELECT challenge_id, text FROM challenge_completion WHERE team_id = ?", (team_id,)
+    )
+    return {r["challenge_id"]: r["text"] for r in rows}
+
 def _load_state(conn: sqlite3.Connection, team_id: str, course: Course) -> TeamState:
     row = conn.execute("SELECT * FROM team_state WHERE team_id = ?", (team_id,)).fetchone()
     index = row["step_index"]
@@ -318,6 +373,25 @@ def resolve_team(conn: sqlite3.Connection, team_id: str, now: datetime) -> Appli
 
 
 # Log and score
+
+@dataclass(frozen=True)
+class LoggedEvent:
+    id: int
+    team_id: str
+    type: str
+    payload: dict
+    ts: datetime
+
+
+def list_events(conn: sqlite3.Connection, team_id: str | None = None) -> list[LoggedEvent]:
+    """The raw audit log, oldest first. Used by `flask show-events` and the organiser view."""
+    sql, args = "SELECT * FROM event", ()
+    if team_id is not None:
+        sql, args = sql + " WHERE team_id = ?", (team_id,)
+    return [
+        LoggedEvent(r["id"], r["team_id"], r["type"], json.loads(r["payload_json"]), _parse(r["ts"]))
+        for r in conn.execute(sql + " ORDER BY id", args)
+    ]
 
 def load_events(conn: sqlite3.Connection, team_id: str) -> list[Event]:
     return [

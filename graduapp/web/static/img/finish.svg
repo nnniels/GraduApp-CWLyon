@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Finish flag">
+  <circle cx="80" cy="80" r="76" fill="#e8f0fe"/>
+  <rect x="52" y="30" width="6" height="100" fill="#444"/>
+  <path d="M58 34h60v44H58z" fill="#fff" stroke="#444" stroke-width="3"/>
+  <path d="M58 34h15v11H58zM88 34h15v11H88zM73 45h15v11H73zM103 45h15v11h-15zM58 56h15v11H58zM88 56h15v11H88zM73 67h15v11H73zM103 67h15v11h-15z" fill="#222"/>
+</svg>

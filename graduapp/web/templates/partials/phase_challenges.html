@@ -1,0 +1,15 @@
+<h2>Challenges</h2>
+<p>Complete {{ k }} of the {{ challenges|length }} challenges before time runs out
+  ({{ ticked_count }} / {{ k }} done).</p>
+<ul class="challenges">
+  {% for c in challenges %}
+  <li>
+    <button type="button" class="challenge{% if c.ticked %} ticked{% endif %}"
+            hx-get="{{ url_for('game.challenge_popup', challenge_id=c.id) }}">
+      <span aria-hidden="true">{{ '☑' if c.ticked else '☐' }}</span> {{ c.text }}
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+<div id="timer" class="timer" data-deadline="{{ deadline }}" data-server-now="{{ server_now }}"
+     role="timer" aria-label="Time left">{{ remaining_label }}</div>

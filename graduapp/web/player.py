@@ -3,8 +3,9 @@ from datetime import datetime, timezone
 from flask import Blueprint, current_app, redirect, render_template, request, url_for
 
 from ..db import repo
-from .auth import current_team, join_key, limiter, login
+from .auth import join_key, limiter, login, current_team
 from .db import get_db
+from .game import render_game_page
 
 bp = Blueprint("player", __name__)
 
@@ -17,9 +18,10 @@ def _select_page(error: str | None = None, error_team: str | None = None, status
 
 @bp.get("/")
 def index():
-    team = current_team(get_db())
+    conn = get_db()
+    team = current_team(conn)
     if team:
-        return render_template("pages/team_locked.html", team=team)
+        return render_game_page(conn, team)
     return _select_page()
 
 

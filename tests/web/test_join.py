@@ -121,8 +121,9 @@ def test_cookie_secure_flag_is_configurable(db_path):
 
 
 def test_secret_key_is_mandatory_outside_debug(db_path):
-    with pytest.raises(RuntimeError):
-        create_app({"SECRET_KEY": "", "DATABASE_PATH": db_path})
+    for bad in ("", "change-me"):  # unset, and the placeholder from .env.example
+        with pytest.raises(RuntimeError):
+            create_app({"SECRET_KEY": bad, "DATABASE_PATH": db_path})
     assert create_app({"SECRET_KEY": "", "DATABASE_PATH": db_path, "TESTING": True})
 
 

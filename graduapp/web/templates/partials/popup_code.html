@@ -1,0 +1,16 @@
+<div class="overlay">
+  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+    <h2 id="popup-title">Validate the location</h2>
+    <p>Ask your supervisor for the code.</p>
+    <form hx-post="{{ url_for('game.arrive') }}" hx-disabled-elt="find button">
+      <input type="hidden" name="step_index" value="{{ step_index }}">
+      <label>Code
+        <input name="code" autocomplete="off" autocapitalize="characters" autocorrect="off"
+               spellcheck="false" required autofocus>
+      </label>
+      {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+      <button type="submit">Validate</button>
+    </form>
+    <button type="button" class="secondary" onclick="document.getElementById('modal').innerHTML=''">Cancel</button>
+  </div>
+</div>

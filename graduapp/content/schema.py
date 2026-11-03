@@ -130,6 +130,10 @@ def build_content(steps_raw, general_raw, itineraries_raw, teams_raw) -> Content
             if not isinstance(value, typ) or isinstance(value, bool) or value == "":
                 errors.append(f"{where}.location: '{name}' is required for kind '{raw['kind']}'")
                 ok = False
+        # The URL becomes a link on the phones: refuse javascript: and the like.
+        if ok and raw["kind"] == "maps_link" and not raw["url"].startswith(("https://", "http://")):
+            errors.append(f"{where}.location: 'url' must start with https:// or http://")
+            ok = False
         return dict(raw) if ok else None
 
     general = []
