@@ -36,6 +36,13 @@ Then, if no error are thrown, open `http://127.0.0.1:5000` in web browser.
 
 Passwords are in `./content/teams` and `./content/steps`.
 
+## Log
+
+
+```powershell
+flask show-events --team team-1 --tail 50
+```
+
 ## Test
 
 ```powershell

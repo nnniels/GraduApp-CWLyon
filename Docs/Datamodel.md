@@ -1,3 +1,52 @@
+# Where the state of the app lives
+
+**One SQLite file:** `instance/graduapp.sqlite`. The path comes from `DATABASE_PATH` in `.env`. While the app runs there are also `graduapp.sqlite-wal` and `-shm` files next to it. That is normal.
+
+| Data | Table |
+|---|---|
+| Team name, itinerary, join code | `team` |
+| Progress: step, phase, deadline | `team_state` |
+| Current ticks and their notes | `challenge_completion` |
+| Full history, source of the score | `event` |
+| General-challenge deadline | `game_setting` |
+
+The phone keeps only a signed cookie with the `team_id`. Clearing it logs the phone out but loses no progress.
+
+# How to read it
+
+- **History:** `flask show-events`, with `--team team-1` and `--tail 20` to filter.
+- **Current state:** a short Python script (no `sqlite3` CLI is needed), or a viewer such as "DB Browser for SQLite" or a VS Code SQLite extension. Open the file read-only while the app runs.
+
+```python
+import sqlite3
+c = sqlite3.connect("instance/graduapp.sqlite")
+print(c.execute("select * from team_state").fetchall())
+```
+
+# How to reset
+
+| Goal | What to do |
+|---|---|
+| **Everything** (teams go back to the YAML names, all progress and history gone) | Stop the app, delete the three `instance/graduapp.sqlite*` files, then run `flask seed`. |
+| **Progress only, keep team names** | Stop the app, then run the SQL below. |
+| **Re-load edited content mid-game** | `flask seed --force`. It never touches progress, but it can break a running game if you changed step order. |
+
+```sql
+DELETE FROM event;
+DELETE FROM challenge_completion;
+UPDATE team_state SET step_index = 0, phase = 'NOT_STARTED', phase_deadline = NULL;
+```
+
+Plain `flask seed` refuses once any team has started, and it never resets progress.
+
+Phones need nothing after a reset. The cookie only holds the team id, so they land on the "Start the game" screen.
+
+**Gap:** there is no reset command, so it's manual SQL today. A `flask reset-game` command would make this safer before the rehearsal. Shall I add one?
+
+**Timer check:** my live check of the new timer was interrupted, so the countdown JavaScript is **not yet verified in a browser**. The 137 tests pass, but they can't run JavaScript. I've now stopped the test server and deleted the scratch databases. I can redo the browser check and finish step 6 whenever you say.
+
+
+
 # Data model
 
 Two kinds of data, kept apart on purpose:
