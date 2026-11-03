@@ -1,0 +1,1 @@
+-- Tables: team, team_state, event, challenge_completion (to be designed with the state machine).
