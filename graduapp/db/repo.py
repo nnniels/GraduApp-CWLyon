@@ -6,7 +6,7 @@ Public API
     resolve_team(conn, team_id, now)        persist a pending expiry (call on page loads)
     get_view(conn, team_id)                 state + course, for rendering
     load_events / get_score                 audit log and computed score
-    list_teams / get_team / check_join_code / rename_team
+    check_join_code / join_team / list_teams / get_team / rename_team
     get/set_general_deadline
 
 Every write runs in a BEGIN IMMEDIATE transaction, so concurrent requests are serialised and a
@@ -28,6 +28,11 @@ from ..engine.transitions import Action, resolve_expiry, transition
 
 GENERAL_DEADLINE_KEY = "general_deadline"
 NAME_MAX_LENGTH = 40
+
+# Not game transitions, so they live here and not in the engine. The score ignores them.
+TEAM_JOINED = "TEAM_JOINED"
+TEAM_RENAMED = "TEAM_RENAMED"
+JOIN_REJECTED = "JOIN_REJECTED"
 
 
 class UnknownTeam(LookupError):
@@ -119,20 +124,57 @@ def get_team(conn: sqlite3.Connection, team_id: str) -> TeamInfo:
     return _info(_team_row(conn, team_id))
 
 
-def check_join_code(conn: sqlite3.Connection, team_id: str, code: str) -> bool:
+def _code_matches(expected: str, code: str) -> bool:
     """Constant-time comparison, ignoring case and surrounding spaces."""
-    expected = _team_row(conn, team_id)["join_code"]
     digest = lambda s: hashlib.sha256(s.strip().casefold().encode()).digest()
     return hmac.compare_digest(digest(expected), digest(code))
 
 
-def rename_team(conn: sqlite3.Connection, team_id: str, name: str) -> None:
+def check_join_code(conn: sqlite3.Connection, team_id: str, code: str) -> bool:
+    return _code_matches(_team_row(conn, team_id)["join_code"], code)
+
+
+def _clean_name(name: str) -> str:
     name = " ".join(name.split())
     if not 1 <= len(name) <= NAME_MAX_LENGTH:
         raise ValueError(f"The name must have 1 to {NAME_MAX_LENGTH} characters")
+    return name
+
+
+def _log(conn: sqlite3.Connection, team_id: str, type_: str, payload: dict, ts: datetime) -> None:
+    conn.execute(
+        "INSERT INTO event (team_id, type, payload_json, ts) VALUES (?, ?, ?, ?)",
+        (team_id, type_, json.dumps(payload, sort_keys=True), _iso(ts)),
+    )
+
+
+def rename_team(conn: sqlite3.Connection, team_id: str, name: str) -> None:
+    name = _clean_name(name)
     with conn:
         if conn.execute("UPDATE team SET name = ? WHERE id = ?", (name, team_id)).rowcount == 0:
             raise UnknownTeam(team_id)
+
+
+def join_team(
+    conn: sqlite3.Connection, team_id: str, code: str, name: str, now: datetime
+) -> bool:
+    """Screen A: check the code, then rename the team if asked, and log it. One transaction.
+
+    Returns False on a wrong code (the attempt is logged, nothing else changes).
+    The name is validated BEFORE the code, so a refusal for a bad name never reveals
+    whether the code was right.
+    """
+    name = _clean_name(name)
+    with _transaction(conn):
+        team = _team_row(conn, team_id)
+        if not _code_matches(team["join_code"], code):
+            _log(conn, team_id, JOIN_REJECTED, {}, now)
+            return False
+        if name != team["name"]:
+            conn.execute("UPDATE team SET name = ? WHERE id = ?", (name, team_id))
+            _log(conn, team_id, TEAM_RENAMED, {"from": team["name"], "to": name}, now)
+        _log(conn, team_id, TEAM_JOINED, {}, now)
+    return True
 
 
 # Content -> engine
@@ -218,10 +260,7 @@ def _persist(conn: sqlite3.Connection, team_id: str, state: TeamState, events) -
         ),
     )
     for e in events:
-        conn.execute(
-            "INSERT INTO event (team_id, type, payload_json, ts) VALUES (?, ?, ?, ?)",
-            (team_id, e.type, json.dumps(e.payload, sort_keys=True), _iso(e.ts)),
-        )
+        _log(conn, team_id, e.type, e.payload, e.ts)
         # Keep the challenge_completion projection in step with the log.
         if e.type == EventType.CHALLENGE_TICKED:
             conn.execute(

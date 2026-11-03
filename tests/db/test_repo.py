@@ -239,6 +239,32 @@ def test_naive_datetimes_are_rejected(conn):
 
 # Teams
 
+def test_join_team_right_code_logs_and_renames(conn):
+    assert repo.join_team(conn, TEAM, " team1-7342 ", "The Foxes", at(0))
+    assert repo.get_team(conn, TEAM).name == "The Foxes"
+    assert types(conn) == [repo.TEAM_RENAMED, repo.TEAM_JOINED]
+
+
+def test_join_team_wrong_code_only_logs_the_attempt(conn):
+    assert not repo.join_team(conn, TEAM, "nope", "Hacked", at(0))
+    assert repo.get_team(conn, TEAM).name == "Team 1"
+    assert types(conn) == [repo.JOIN_REJECTED]
+
+
+def test_join_team_bad_name_is_refused_before_the_code_is_checked(conn):
+    for code in ("TEAM1-7342", "nope"):
+        with pytest.raises(ValueError):
+            repo.join_team(conn, TEAM, code, "", at(0))
+    assert types(conn) == []
+
+
+def test_join_events_do_not_affect_the_score_or_the_game(conn):
+    repo.join_team(conn, TEAM, "TEAM1-7342", "Foxes", at(0))
+    act(conn, Start(), 1)
+    assert repo.get_score(conn, TEAM).total == 0
+    assert repo.get_view(conn, TEAM).state.phase is Phase.GOING
+
+
 def test_join_code(conn):
     assert repo.check_join_code(conn, TEAM, "TEAM1-7342")
     assert repo.check_join_code(conn, TEAM, "  team1-7342 ")
