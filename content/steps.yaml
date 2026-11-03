@@ -1,0 +1,29 @@
+# Library of steps. An itinerary only lists step ids, so a step can be shared between itineraries.
+# Exactly one of `riddle` or `challenges` per step. Codes are validated by the supervisor: keep them quoted.
+# location.kind: text (text) | maps_link (url) | minimap (lat, lon). `label` is optional.
+steps:
+  - id: place-bellecour
+    location: {kind: text, text: "Statue of Louis XIV, Place Bellecour"}
+    code: "4821"
+    unlocks: [selfie-statue]
+    points: 2
+    challenges:
+      k: 2
+      duration_s: 600
+      items:
+        - {id: bellecour-human-pyramid, text: "Build a human pyramid of 3 levels", points: 2}
+        - {id: bellecour-sing, text: "Sing the national anthem together"}
+        - {id: bellecour-count-lamps, text: "Count the lamp posts around the statue"}
+
+  - id: tour-metallique
+    location: {kind: maps_link, url: "https://maps.google.com/?q=45.7624,4.8222", label: "Fourviere"}
+    code: "1337"
+    riddle:
+      text: "I have cities but no houses, mountains but no trees, water but no fish. What am I?"
+
+  - id: place-terreaux
+    location: {kind: minimap, lat: 45.7676, lon: 4.8338, label: "Place des Terreaux"}
+    code: "0420"
+    unlocks: [fountain-pose]
+    riddle:
+      text: "What is the name of the sculptor of the fountain?"

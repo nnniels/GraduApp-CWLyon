@@ -28,7 +28,7 @@ Stored separately (derived from events or in their own table, see section 7):
 ```mermaid
 stateDiagram-v2
     [*] --> NOT_STARTED
-    NOT_STARTED --> GOING : start (organiser)
+    NOT_STARTED --> GOING : start (the team itself)
 
     GOING --> RIDDLE : arrive(code ok) and step.kind = riddle
     GOING --> CHALLENGES : arrive(code ok) and step.kind = challenges
@@ -51,7 +51,7 @@ Note: general challenges (screen C) are **orthogonal**. They can be ticked or un
 
 | Action | Allowed in | Guard | Effect |
 |---|---|---|---|
-| `start` | `NOT_STARTED` | organiser only | `step_index = 0`, `phase = GOING` |
+| `start` | `NOT_STARTED` | none, each team starts its own game | `step_index = 0`, `phase = GOING` |
 | `arrive(code)` | `GOING` | code equals `step.code` | Add `step.unlocks` to the general list. `phase` becomes `RIDDLE`, or `CHALLENGES` with `deadline = now + step.duration`. |
 | `submit_riddle(text)` | `RIDDLE` | text not empty | Store the answer (never judged), then advance. |
 | `tick_step_challenge(id, text)` | `CHALLENGES` | `now < deadline`, id belongs to the step, not already ticked | Tick it. If ticked count `>= k`, success and advance. |
@@ -104,14 +104,14 @@ Each transition returns the events to persist, in the same transaction as the ne
 ## 8. Scoring proposal (computed, not stored)
 
 - Each challenge has `points` in the YAML (default 1).
-- Score = sum of points of ticked and not unticked challenges (step and general), plus an optional `step.points` for each `STEP_SUCCEEDED`.
+- General challenges: points of each ticked and not unticked challenge.
+- Step challenges: points only if the step ended in `STEP_SUCCEEDED`. A failed step still advances (and its unlocks are still given) but brings no points home.
+- `step.points` is a bonus added for each `STEP_SUCCEEDED`.
 - Riddles: points are awarded when the gamemaster reviews them, so they are **not** in the computed score for now.
 - Time is a possible tie-breaker (`GAME_ENDED.ts - GAME_STARTED.ts`).
 
 ## 9. Open questions
 
-1. **Who starts the game?** One global "start all teams" button, or per team? I lean towards both, via the organiser screen.
-2. **After `ENDED`**, should general challenges stay tickable? I lean towards yes, until the organiser closes the game.
-3. **Failure and unlocks**: when a challenge step fails, are its `unlocks` still given? In this draft they are, because unlocking happens on arrival.
-4. **Scoring**: are the points above right, and is a step failure penalised?
-5. **Timer on riddles**: the spec has none. Is that intended?
+Resolved: each team starts its own game; riddles have no timer; a failed step still advances and unlocks, but scores nothing.
+
+1. **After `ENDED`**, should general challenges stay tickable? I lean towards yes, until the organiser closes the game.

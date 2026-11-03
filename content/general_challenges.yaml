@@ -1,1 +1,8 @@
-# General-purpose challenges (screen C). Schema to be defined with the state machine.
+# General-purpose challenges (screen C).
+# unlocked_at_start: true  -> visible from the beginning
+# otherwise unlocked by a step through its `unlocks` list.
+challenges:
+  - {id: team-photo, text: "Take a team photo with a stranger", points: 1, unlocked_at_start: true}
+  - {id: street-musician, text: "Have a street musician play a song for you", points: 2, unlocked_at_start: true}
+  - {id: selfie-statue, text: "Selfie imitating a statue", points: 2}
+  - {id: fountain-pose, text: "Pose like the fountain sculpture", points: 2}
