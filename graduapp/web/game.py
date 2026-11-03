@@ -4,6 +4,7 @@ Every route answers with the SAME response (partials/response.html): the panel, 
 out-of-band swap of the popup container. This keeps one rule for the whole screen: any request
 may reveal a timed-out step, and the phone is always shown the true state.
 """
+import math
 from datetime import datetime, timezone
 from functools import wraps
 from pathlib import Path
@@ -115,7 +116,7 @@ def _context(conn, team_id, events=(), popup=None, popup_ctx=None) -> dict:
         ctx["step"] = step
         ctx["location"] = _location(step.location)
     if state.phase is Phase.CHALLENGES:
-        remaining = max(0, int((state.phase_deadline - now).total_seconds()))
+        remaining = max(0, math.ceil((state.phase_deadline - now).total_seconds()))
         ctx.update(
             challenges=[
                 {"id": c.id, "text": c.text, "ticked": c.id in state.step_ticked}

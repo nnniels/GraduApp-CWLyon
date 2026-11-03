@@ -232,6 +232,35 @@ def test_late_tick_reveals_the_failure(me):
     assert types(me.db).count("STEP_FAILED") == 1
 
 
+# Timer
+
+def test_timer_carries_what_the_script_needs(me, client):
+    me.start()
+    html = me.arrive("4821")
+    assert 'id="timer"' in html and 'data-refresh-url="/game/panel"' in html
+    deadline = re.search(r'data-deadline="([^"]+)"', html).group(1)
+    server_now = re.search(r'data-server-now="([^"]+)"', html).group(1)
+    remaining = datetime.fromisoformat(deadline) - datetime.fromisoformat(server_now)
+    assert timedelta(seconds=595) < remaining <= timedelta(seconds=600)
+    assert "js/timer.js" in client.get("/").get_data(as_text=True)  # loaded by the full page
+
+
+def test_panel_route_resolves_expiry_for_the_timer_refresh(me):
+    me.start()
+    me.arrive("4821")
+    expire(me.db)
+    html = me.get("/game/panel")  # what the timer asks for when it reaches 0
+    assert "Time is up" in html and 'id="timer"' not in html
+    assert me.state.step_index == 1
+
+
+def test_panel_route_before_the_deadline_keeps_the_timer(me):
+    me.start()
+    me.arrive("4821")
+    html = me.get("/game/panel")
+    assert 'id="timer"' in html and "Time is up" not in html
+
+
 # Mode 2 and 4: riddle, minimap, end
 
 def reach_riddle(me):
