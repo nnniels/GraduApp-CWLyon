@@ -55,6 +55,7 @@ Schema: [graduapp/db/schema.sql](../graduapp/db/schema.sql).
 | `team_state(team_id, step_index, phase, phase_deadline)` | One row per team, as in the state machine. |
 | `challenge_completion(team_id, challenge_id, text, ticked_at)` | Current ticks only. Unticking deletes the row. |
 | `event(id, team_id, type, payload_json, ts)` | Append-only. Index on `(team_id, id)`. |
+| `game_setting(key, value)` | Organiser settings. Today only `general_deadline`: until when general challenges can be ticked. Absent means no limit. |
 
 ### Choices
 
@@ -68,7 +69,20 @@ Schema: [graduapp/db/schema.sql](../graduapp/db/schema.sql).
 | **Timestamps as ISO 8601 UTC text** | Readable in the DB, sortable, no timezone confusion. Converted by the app. |
 | **`payload_json` as JSON text** | Payloads differ by event type. Never filtered in SQL, only read back. |
 | **Join code `UNIQUE`** | It identifies the team at screen A. |
+| **Key/value `game_setting` table** | One row today, but the organiser screen will add more settings without a migration. |
 | **Foreign keys on, WAL mode, busy timeout** | Set in `db/connection.py`. Integrity errors are loud, and readers do not block the writer. |
+
+## Repo layer (`db/repo.py`)
+
+| Rule | Reason |
+|---|---|
+| One `BEGIN IMMEDIATE` transaction per action: load, transition, persist | Concurrent requests are serialised, so a double tap applies once (tested with two connections). |
+| State, events and `challenge_completion` are written together | The projection cannot drift from the log. |
+| A refused action still persists the expiry it revealed, then re-raises | A timed-out step has failed whatever the request was. |
+| `resolve_team` on every page load | Expiry is lazy: viewing the page must also record it. |
+| Team listing never returns join codes; `check_join_code` compares in constant time | Codes never reach a template. |
+| Datetimes must be timezone-aware, stored as UTC | No naive-time bugs. |
+| `step_ticked` loaded only for the current step | Ticks of closed steps are history, not state. |
 
 ## Seeding rules (`flask seed`)
 

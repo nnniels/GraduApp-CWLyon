@@ -78,6 +78,12 @@ CREATE TABLE IF NOT EXISTS challenge_completion (
     PRIMARY KEY (team_id, challenge_id)
 );
 
+-- Game-wide settings set by the organiser. `general_deadline`: ISO 8601 UTC, absent = no limit.
+CREATE TABLE IF NOT EXISTS game_setting (
+    key   TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
 -- Append-only audit log. Source of truth for review and scoring. ts is ISO 8601 UTC.
 CREATE TABLE IF NOT EXISTS event (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,

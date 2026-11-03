@@ -118,7 +118,7 @@ Each transition returns the events to persist, in the same transaction as the ne
 
 Resolved: each team starts its own game; riddles have no timer; a failed step still advances and unlocks, but scores nothing; general challenges stay tickable until the organiser's `general_deadline`.
 
-1. **Where is `general_deadline` stored?** A small `game_setting` table edited from the organiser screen, or an environment variable read at startup. I lean towards the table. It is decided with the repo layer.
+1. ~~Where is `general_deadline` stored?~~ Decided: the `game_setting` table, edited from the organiser screen (`repo.set_general_deadline`).
 
 ---
 # Game engine
