@@ -160,7 +160,7 @@ Build a **vertical slice first**: one team, one hard-coded itinerary, playable e
 | 3 | **Tests of the engine** | pytest: nominal path, k of n success, timeout failure, double-submit, wrong code, unlock logic. |
 | 4 | **Team identity** | Screen A, join code check, signed session cookie, and the team lock. |
 | 5 | **Screen B** | Four modes as HTMX partials, the validation-code popup, and the unlock popup. |
-| 6 | **Timer** | Client countdown from a server deadline, clock offset, server-side expiry on every request, and a mini-timer visible in C. |
+| 6 | **Timer** | Client countdown from a server deadline, clock offset, server-side expiry on every request, and a mini-timer visible in C.  </br> `*This was not done -- to be added later*`|
 | 7 | **Screen C** | General challenges, tick/undo popups, and a "NEW" badge on unlocked ones. |
 | 8 | **Organiser view (D)** | Password-protected. Team progress, answers, the event log, and the location validation codes. A CSV export is cheap and useful for the review. |
 | 9 | **Exposure & hardening** | Named Cloudflare tunnel with systemd, Cloudflare Access on `/admin`, rate-limiting on code entry, and no secrets or answers leaked to the client. |
