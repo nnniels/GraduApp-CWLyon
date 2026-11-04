@@ -24,7 +24,7 @@ def create_app(config: dict | None = None) -> Flask:
         log.warning("SECRET_KEY not set: using an insecure development key")
         app.config["SECRET_KEY"] = "insecure-development-key"
 
-    from .cli import seed_command, show_events_command
+    from .cli import reset_game_command, seed_command, show_events_command
     from .web import db
     from .web.auth import limiter
     from .web.game import bp as game_bp
@@ -35,6 +35,7 @@ def create_app(config: dict | None = None) -> Flask:
     limiter.init_app(app)
     app.cli.add_command(seed_command)
     app.cli.add_command(show_events_command)
+    app.cli.add_command(reset_game_command)
     app.register_blueprint(player_bp)
     app.register_blueprint(game_bp)
     app.register_blueprint(admin_bp, url_prefix="/admin")

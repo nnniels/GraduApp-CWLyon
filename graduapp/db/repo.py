@@ -372,6 +372,25 @@ def resolve_team(conn: sqlite3.Connection, team_id: str, now: datetime) -> Appli
     return Applied(state, events)
 
 
+def reset_game(conn: sqlite3.Connection, names: dict[str, str] | None = None) -> int:
+    """Back to the pre-game state: every team NOT_STARTED, no ticks, empty event log.
+
+    Kept: content, teams, join codes, and game settings (general_deadline).
+    `names` ({team_id: name}) also restores team names. Returns the number of events deleted.
+    One transaction, so a running app never sees a half-reset game.
+    """
+    with _transaction(conn):
+        deleted = conn.execute("SELECT COUNT(*) FROM event").fetchone()[0]
+        conn.execute("DELETE FROM challenge_completion")
+        conn.execute("DELETE FROM event")
+        conn.execute(
+            "UPDATE team_state SET step_index = 0, phase = 'NOT_STARTED', phase_deadline = NULL"
+        )
+        for team_id, name in (names or {}).items():
+            conn.execute("UPDATE team SET name = ? WHERE id = ?", (_clean_name(name), team_id))
+    return deleted
+
+
 # Log and score
 
 @dataclass(frozen=True)

@@ -237,6 +237,52 @@ def test_naive_datetimes_are_rejected(conn):
         repo.set_general_deadline(conn, datetime(2026, 11, 7, 14, 0))
 
 
+# Reset
+
+def play_a_bit(conn):
+    repo.join_team(conn, TEAM, "TEAM1-7342", "The Foxes", at(0))
+    act(conn, Start(), 1)
+    act(conn, TickGeneral("team-photo", "x"), 2)
+    act(conn, Arrive(0, "4821"), 3)
+    act(conn, TickStep(0, "bellecour-sing"), 4)
+
+
+def test_reset_game_clears_progress_but_keeps_names_codes_and_settings(conn):
+    play_a_bit(conn)
+    repo.set_general_deadline(conn, at(9999))
+    deleted = repo.reset_game(conn)
+    assert deleted > 0
+    assert repo.load_events(conn, TEAM) == []
+    assert rows(conn, "SELECT * FROM challenge_completion") == []
+    view = repo.get_view(conn, TEAM)
+    assert (view.state.phase, view.state.step_index) == (Phase.NOT_STARTED, 0)
+    assert view.state.phase_deadline is None and view.state.general_ticked == frozenset()
+    assert view.team.name == "The Foxes"
+    assert repo.check_join_code(conn, TEAM, "TEAM1-7342")
+    assert repo.get_general_deadline(conn) == at(9999)
+
+
+def test_reset_game_can_restore_names(conn):
+    play_a_bit(conn)
+    repo.reset_game(conn, {"team-1": "Team 1", "team-2": "Team 2"})
+    assert [t.name for t in repo.list_teams(conn)] == ["Team 1", "Team 2"]
+
+
+def test_a_reset_team_can_play_again(conn):
+    play_a_bit(conn)
+    repo.reset_game(conn)
+    act(conn, Start(), 10)
+    assert repo.get_view(conn, TEAM).state.phase is Phase.GOING
+
+
+def test_reset_is_all_or_nothing(conn):
+    play_a_bit(conn)
+    with pytest.raises(ValueError):
+        repo.reset_game(conn, {"team-1": ""})  # invalid name aborts the whole reset
+    assert repo.get_view(conn, TEAM).state.phase is Phase.CHALLENGES
+    assert len(repo.load_events(conn, TEAM)) > 0
+
+
 # Teams
 
 def test_join_team_right_code_logs_and_renames(conn):
