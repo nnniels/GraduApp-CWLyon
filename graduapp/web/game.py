@@ -18,14 +18,23 @@ from flask import (
     render_template,
     request,
     send_from_directory,
+    session,
     url_for,
 )
 
 from ..db import repo
 from ..engine.errors import InvalidTransition
 from ..engine.events import EventType as E
-from ..engine.states import Phase
-from ..engine.transitions import Arrive, Start, SubmitRiddle, TickStep, UntickStep
+from ..engine.states import Phase, unlocked_general
+from ..engine.transitions import (
+    Arrive,
+    Start,
+    SubmitRiddle,
+    TickGeneral,
+    TickStep,
+    UntickGeneral,
+    UntickStep,
+)
 from .auth import current_team
 from .db import get_db
 
@@ -41,6 +50,11 @@ PROOF_MAX_LENGTH = 500
 
 def _now() -> datetime:
     return datetime.now(timezone.utc)
+
+
+def _general_open(conn, now: datetime) -> bool:
+    deadline = repo.get_general_deadline(conn)
+    return deadline is None or now < deadline
 
 
 def _int(name: str) -> int:
@@ -129,6 +143,20 @@ def _context(conn, team_id, events=(), popup=None, popup_ctx=None) -> dict:
             server_now=now.isoformat(),
         )
 
+    # B/C toggle. The chosen view lives in the signed cookie, so it survives reloads and the
+    # timer's refresh. Before the game starts there is only one screen.
+    view_name = session.get("view", "b") if state.phase is not Phase.NOT_STARTED else "b"
+    unlocked = unlocked_general(course, state)
+    new_ids = unlocked - repo.get_seen_general(conn, team_id)
+    ctx["view"] = view_name
+    ctx["new_count"] = len(new_ids)
+    if view_name == "c":
+        todo, done = [], []
+        for c in repo.list_general_challenges(conn, unlocked):
+            row = {"id": c.id, "text": c.text, "new": c.id in new_ids}
+            (done if c.id in state.general_ticked else todo).append(row)
+        ctx.update(todo=todo, done=done, general_open=_general_open(conn, now))
+
     if any(e.type == E.CODE_REJECTED for e in events):
         popup, popup_ctx = POPUP_CODE, {"error": "Wrong code"}
     if popup is None:
@@ -213,7 +241,9 @@ def challenge_popup(challenge_id: str):
     ticked = challenge_id in state.step_ticked
     proof = repo.get_completion_texts(conn, g.team.id).get(challenge_id, "") if ticked else ""
     return _respond(
-        events, POPUP_CHALLENGE, {"challenge": info, "challenge_ticked": ticked, "proof": proof}
+        events,
+        POPUP_CHALLENGE,
+        {"challenge": info, "challenge_ticked": ticked, "proof": proof, "scope": "step"},
     )
 
 
@@ -228,6 +258,57 @@ def tick():
 @team_required
 def untick():
     return _do(UntickStep(_int("step_index"), request.form.get("challenge_id", "")))
+
+
+@bp.post("/view")
+@team_required
+def switch_view():
+    conn = get_db()
+    events = repo.resolve_team(conn, g.team.id, _now()).events
+    wanted = "c" if request.form.get("view") == "c" else "b"
+    if session.get("view", "b") == "c" and wanted == "b":
+        # Leaving screen C: what was NEW has now been seen.
+        view = repo.get_view(conn, g.team.id)
+        repo.mark_general_seen(conn, g.team.id, unlocked_general(view.course, view.state))
+    session["view"] = wanted
+    return _respond(events)
+
+
+@bp.get("/general/<challenge_id>")
+@team_required
+def general_popup(challenge_id: str):
+    conn = get_db()
+    now = _now()
+    events = repo.resolve_team(conn, g.team.id, now).events
+    view = repo.get_view(conn, g.team.id)
+    state = view.state
+    if (
+        state.phase is Phase.NOT_STARTED
+        or challenge_id not in unlocked_general(view.course, state)
+        or not _general_open(conn, now)
+    ):
+        return _respond(events)
+    info = repo.list_general_challenges(conn, {challenge_id})[0]
+    ticked = challenge_id in state.general_ticked
+    proof = repo.get_completion_texts(conn, g.team.id).get(challenge_id, "") if ticked else ""
+    return _respond(
+        events,
+        POPUP_CHALLENGE,
+        {"challenge": info, "challenge_ticked": ticked, "proof": proof, "scope": "general"},
+    )
+
+
+@bp.post("/general/tick")
+@team_required
+def general_tick():
+    text = request.form.get("text", "")[:PROOF_MAX_LENGTH]
+    return _do(TickGeneral(request.form.get("challenge_id", ""), text))
+
+
+@bp.post("/general/untick")
+@team_required
+def general_untick():
+    return _do(UntickGeneral(request.form.get("challenge_id", "")))
 
 
 @bp.get("/media/<path:filename>")

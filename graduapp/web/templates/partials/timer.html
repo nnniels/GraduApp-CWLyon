@@ -1,0 +1,2 @@
+<div id="timer" class="timer{% if mini %} mini{% endif %}" data-deadline="{{ deadline }}" data-server-now="{{ server_now }}"
+     data-refresh-url="{{ url_for('game.panel') }}" role="timer" aria-label="Time left">{{ remaining_label }}</div>

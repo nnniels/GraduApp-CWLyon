@@ -19,7 +19,7 @@ from graduapp.engine.transitions import (
     UntickStep,
 )
 
-CONTENT_DIR = Path(__file__).resolve().parents[2] / "content"
+CONTENT_DIR = Path(__file__).resolve().parents[1] / "fixtures" / "content"
 T0 = datetime(2026, 11, 7, 14, 0, tzinfo=timezone.utc)
 TEAM = "team-1"  # itinerary-a: place-bellecour (k=2 of 3, 600 s), tour-metallique, place-terreaux
 
@@ -238,6 +238,29 @@ def test_naive_datetimes_are_rejected(conn):
 
 
 # Reset
+
+def test_general_challenge_lookup_and_seen_state(conn):
+    infos = repo.list_general_challenges(conn, {"fountain-pose", "team-photo", "bellecour-sing"})
+    assert [c.id for c in infos] == ["team-photo", "fountain-pose"]  # authoring order, general only
+    assert repo.get_seen_general(conn, TEAM) == frozenset()
+    repo.mark_general_seen(conn, TEAM, ["team-photo", "fountain-pose"])
+    repo.mark_general_seen(conn, TEAM, ["team-photo"])  # idempotent
+    assert repo.get_seen_general(conn, TEAM) == {"team-photo", "fountain-pose"}
+    assert repo.get_seen_general(conn, "team-2") == frozenset()
+
+
+def test_reset_game_forgets_what_was_seen(conn):
+    repo.mark_general_seen(conn, TEAM, ["team-photo"])
+    repo.reset_game(conn)
+    assert repo.get_seen_general(conn, TEAM) == frozenset()
+
+
+def test_removing_a_challenge_from_the_content_does_not_break_seen(conn):
+    repo.mark_general_seen(conn, TEAM, ["fountain-pose"])
+    conn.execute("DELETE FROM step_unlock WHERE challenge_id = 'fountain-pose'")
+    conn.execute("DELETE FROM challenge WHERE id = 'fountain-pose'")  # what a re-seed prune does
+    assert repo.get_seen_general(conn, TEAM) == frozenset()
+
 
 def play_a_bit(conn):
     repo.join_team(conn, TEAM, "TEAM1-7342", "The Foxes", at(0))

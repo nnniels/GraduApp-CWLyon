@@ -38,6 +38,21 @@ button.challenge.ticked { border-color: #1b6e2d; background: #eaf6ec; }
 
 .timer.urgent { color: #b00020; border-color: #b00020; }
 
+/* Screen C: toggle, mini-timer, NEW markers */
+.toggle { display: flex; gap: 0.5rem; margin: 0 0 1rem; }
+button.tab { flex: 1; margin: 0; background: #fff; color: #1a56db; border: 2px solid #1a56db; }
+button.tab.active { background: #1a56db; color: #fff; }
+.badge, .new { display: inline-block; margin-left: 0.25rem; padding: 0.05rem 0.45rem; border-radius: 1rem;
+               font-size: 0.8rem; font-weight: 700; background: #ff9800; color: #222; }
+.mini-timer { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+              margin-bottom: 1rem; padding: 0.5rem 0.75rem; border: 2px solid #1a56db; border-radius: 0.5rem; }
+.timer.mini { margin: 0; padding: 0; border: 0; font-size: 1.5rem; }
+.timer.mini.urgent { color: #b00020; }
+h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+.challenges.done button.challenge { background: #eaf6ec; border-color: #1b6e2d; }
+.challenge.readonly { padding: 0.75rem; border: 2px solid #ccc; border-radius: 0.5rem; background: #f4f4f4; }
+.notice { padding: 0.75rem; border-radius: 0.5rem; background: #fff3cd; }
+
 /* Popups are bottom sheets: the keyboard and the thumb both reach them easily. */
 .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: flex;
            align-items: flex-end; justify-content: center; z-index: 10; }

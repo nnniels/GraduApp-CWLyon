@@ -11,5 +11,4 @@
   </li>
   {% endfor %}
 </ul>
-<div id="timer" class="timer" data-deadline="{{ deadline }}" data-server-now="{{ server_now }}"
-     data-refresh-url="{{ url_for('game.panel') }}" role="timer" aria-label="Time left">{{ remaining_label }}</div>
+{% include "partials/timer.html" %}

@@ -1,0 +1,34 @@
+{% macro row(c, open) %}
+<li>
+  {% if open %}
+  <button type="button" class="challenge" hx-get="{{ url_for('game.general_popup', challenge_id=c.id) }}">
+    {{ c.text }}{% if c.new %} <span class="new">NEW</span>{% endif %}
+  </button>
+  {% else %}
+  <div class="challenge readonly">{{ c.text }}</div>
+  {% endif %}
+</li>
+{% endmacro %}
+
+{% if phase == 'CHALLENGES' %}
+<div class="mini-timer">
+  <span>Location challenges: time left</span>
+  {% with mini=True %}{% include "partials/timer.html" %}{% endwith %}
+</div>
+{% endif %}
+
+{% if not general_open %}<p class="notice">The challenges are closed. Hand in your photos to the gamemaster.</p>{% endif %}
+
+<h3>To do ({{ todo|length }})</h3>
+<ul class="challenges">
+  {% for c in todo %}{{ row(c, general_open) }}
+  {% else %}<li><p>Nothing left to do. New challenges appear as you reach new locations.</p></li>
+  {% endfor %}
+</ul>
+
+<h3>Done ({{ done|length }})</h3>
+<ul class="challenges done">
+  {% for c in done %}{{ row(c, general_open) }}
+  {% else %}<li><p>Nothing yet.</p></li>
+  {% endfor %}
+</ul>

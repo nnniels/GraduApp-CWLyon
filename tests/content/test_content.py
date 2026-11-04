@@ -36,8 +36,13 @@ def raw():
 
 
 def test_real_content_is_valid():
+    """The only test that reads the live content/ folder: a typo there must fail the build."""
     content = load_content(CONTENT_DIR)
     assert content.teams and content.itineraries and content.steps
+
+
+def test_fixture_content_is_valid():
+    assert load_content(CONTENT_DIR.parent / "tests" / "fixtures" / "content").steps
 
 
 def test_minimal_content_is_valid():

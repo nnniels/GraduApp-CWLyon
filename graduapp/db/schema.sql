@@ -78,6 +78,14 @@ CREATE TABLE IF NOT EXISTS challenge_completion (
     PRIMARY KEY (team_id, challenge_id)
 );
 
+-- General challenges the team has already looked at on screen C (drives the NEW badge).
+-- UI state only: not a game event, never scored. Cascade so re-seeding can remove a challenge.
+CREATE TABLE IF NOT EXISTS challenge_seen (
+    team_id      TEXT NOT NULL REFERENCES team (id),
+    challenge_id TEXT NOT NULL REFERENCES challenge (id) ON DELETE CASCADE,
+    PRIMARY KEY (team_id, challenge_id)
+);
+
 -- Game-wide settings set by the organiser. `general_deadline`: ISO 8601 UTC, absent = no limit.
 CREATE TABLE IF NOT EXISTS game_setting (
     key   TEXT PRIMARY KEY,

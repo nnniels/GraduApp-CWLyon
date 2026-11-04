@@ -8,7 +8,7 @@ from graduapp.db.connection import connect, init_db
 from graduapp.db.seed import seed
 from graduapp.web.auth import limiter
 
-CONTENT_DIR = Path(__file__).resolve().parents[2] / "content"
+CONTENT_DIR = Path(__file__).resolve().parents[1] / "fixtures" / "content"
 
 
 @pytest.fixture
@@ -23,7 +23,14 @@ def db_path(tmp_path):
 
 @pytest.fixture
 def app(db_path):
-    app = create_app({"TESTING": True, "SECRET_KEY": "test-key", "DATABASE_PATH": db_path})
+    app = create_app(
+        {
+            "TESTING": True,
+            "SECRET_KEY": "test-key",
+            "DATABASE_PATH": db_path,
+            "CONTENT_DIR": str(CONTENT_DIR),  # for `flask reset-game --names`
+        }
+    )
     limiter.reset()  # the limiter is module-level: start every test with empty counters
     return app
 

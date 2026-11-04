@@ -271,6 +271,31 @@ def challenge_texts(conn: sqlite3.Connection, ids: list[str]) -> dict[str, str]:
     return {r["id"]: r["text"] for r in rows}
 
 
+def list_general_challenges(
+    conn: sqlite3.Connection, ids: frozenset[str] | set[str]
+) -> list[ChallengeInfo]:
+    """The given general challenges, in the order the author wrote them."""
+    rows = conn.execute(
+        "SELECT id, text FROM challenge WHERE scope = 'general' "
+        "AND id IN (SELECT value FROM json_each(?)) ORDER BY position",
+        (json.dumps(sorted(ids)),),
+    )
+    return [ChallengeInfo(r["id"], r["text"]) for r in rows]
+
+
+def get_seen_general(conn: sqlite3.Connection, team_id: str) -> frozenset[str]:
+    rows = conn.execute("SELECT challenge_id FROM challenge_seen WHERE team_id = ?", (team_id,))
+    return frozenset(r["challenge_id"] for r in rows)
+
+
+def mark_general_seen(conn: sqlite3.Connection, team_id: str, ids) -> None:
+    with conn:
+        conn.executemany(
+            "INSERT OR IGNORE INTO challenge_seen (team_id, challenge_id) VALUES (?, ?)",
+            [(team_id, i) for i in ids],
+        )
+
+
 def get_completion_texts(conn: sqlite3.Connection, team_id: str) -> dict[str, str]:
     """What the team typed when ticking, by challenge id (current ticks only)."""
     rows = conn.execute(
@@ -382,6 +407,7 @@ def reset_game(conn: sqlite3.Connection, names: dict[str, str] | None = None) ->
     with _transaction(conn):
         deleted = conn.execute("SELECT COUNT(*) FROM event").fetchone()[0]
         conn.execute("DELETE FROM challenge_completion")
+        conn.execute("DELETE FROM challenge_seen")
         conn.execute("DELETE FROM event")
         conn.execute(
             "UPDATE team_state SET step_index = 0, phase = 'NOT_STARTED', phase_deadline = NULL"

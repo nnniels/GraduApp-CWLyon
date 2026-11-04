@@ -7,7 +7,7 @@ from graduapp.content.loader import load_content
 from graduapp.db.connection import connect, init_db
 from graduapp.db.seed import SeedError, seed
 
-CONTENT_DIR = Path(__file__).resolve().parents[2] / "content"
+CONTENT_DIR = Path(__file__).resolve().parents[1] / "fixtures" / "content"
 
 
 @pytest.fixture

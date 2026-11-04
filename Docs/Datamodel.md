@@ -7,10 +7,11 @@
 | Team name, itinerary, join code | `team` |
 | Progress: step, phase, deadline | `team_state` |
 | Current ticks and their notes | `challenge_completion` |
+| Which general challenges a team has already looked at (NEW badge) | `challenge_seen` |
 | Full history, source of the score | `event` |
 | General-challenge deadline | `game_setting` |
 
-The phone keeps only a signed cookie with the `team_id`. Clearing it logs the phone out but loses no progress.
+The phone keeps only a signed cookie with the `team_id` and the chosen screen (B or C). Clearing it logs the phone out but loses no progress.
 
 # How to read it
 
@@ -27,19 +28,14 @@ print(c.execute("select * from team_state").fetchall())
 
 | Goal | What to do |
 |---|---|
-| **Everything** (teams go back to the YAML names, all progress and history gone) | Stop the app, delete the three `instance/graduapp.sqlite*` files, then run `flask seed`. |
-| **Progress only, keep team names** | Stop the app, then run the SQL below. |
+| **Progress** (all teams back to `NOT_STARTED`, ticks, NEW markers and history erased; names, codes and the general deadline kept) | `flask reset-game` |
+| **Progress and team names** (names back to `content/teams.yaml`) | `flask reset-game --names` |
+| **Everything, including the database** | Stop the app, delete the three `instance/graduapp.sqlite*` files, then run `flask seed`. |
 | **Re-load edited content mid-game** | `flask seed --force`. It never touches progress, but it can break a running game if you changed step order. |
-
-```sql
-DELETE FROM event;
-DELETE FROM challenge_completion;
-UPDATE team_state SET step_index = 0, phase = 'NOT_STARTED', phase_deadline = NULL;
-```
 
 Plain `flask seed` refuses once any team has started, and it never resets progress.
 
-Phones need nothing after a reset. The cookie only holds the team id, so they land on the "Start the game" screen.
+Phones keep their cookie after a reset, so they stay on their team and land on the "Start the game" screen. To pick another team, clear the browser cookies.
 
 **Gap:** there is no reset command, so it's manual SQL today. A `flask reset-game` command would make this safer before the rehearsal. Shall I add one?
 
@@ -103,6 +99,7 @@ Schema: [graduapp/db/schema.sql](../graduapp/db/schema.sql).
 | `team(id, name, itinerary_id, join_code UNIQUE)` | The `name` is editable in the app. |
 | `team_state(team_id, step_index, phase, phase_deadline)` | One row per team, as in the state machine. |
 | `challenge_completion(team_id, challenge_id, text, ticked_at)` | Current ticks only. Unticking deletes the row. |
+| `challenge_seen(team_id, challenge_id)` | General challenges the team has looked at on screen C. Drives the NEW badge. UI state only: not an event, never scored. Cascades if a challenge is removed by a re-seed. |
 | `event(id, team_id, type, payload_json, ts)` | Append-only. Index on `(team_id, id)`. |
 | `game_setting(key, value)` | Organiser settings. Today only `general_deadline`: until when general challenges can be ticked. Absent means no limit. |
 
@@ -115,6 +112,8 @@ Schema: [graduapp/db/schema.sql](../graduapp/db/schema.sql).
 | **`event` is the source of truth, `challenge_completion` a projection** | The log is for review and scoring and keeps all history (ticks, unticks, wrong codes). The completion table makes the UI query trivial. Both are written in one transaction by `db/repo.py`. |
 | **Scoring read from events, not stored** | Nothing stored twice, and a future leaderboard is a query. |
 | **No `unlocked_challenge` table** | Derived: initial general challenges, plus the `step_unlock` of every step the team has reached. Reaching a step is known from `step_index` and `phase`. One less thing to keep in sync. |
+| **`challenge_seen` is a table, not a cookie** | NEW must survive a reload and a phone swap, and a team is not a phone. It is marked when the team *leaves* screen C, so the NEW tags stay visible for the whole visit. |
+| **The selected screen (B/C) lives in the cookie** | It is pure display state, per phone. It is not stored in the DB and never logged. |
 | **Timestamps as ISO 8601 UTC text** | Readable in the DB, sortable, no timezone confusion. Converted by the app. |
 | **`payload_json` as JSON text** | Payloads differ by event type. Never filtered in SQL, only read back. |
 | **Join code `UNIQUE`** | It identifies the team at screen A. |

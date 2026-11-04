@@ -1,0 +1,9 @@
+<nav class="toggle" aria-label="Screens">
+  <button type="button" class="tab{% if view == 'b' %} active{% endif %}"
+          {% if view == 'b' %}aria-current="page"{% endif %}
+          hx-post="{{ url_for('game.switch_view') }}" hx-vals='{"view": "b"}'>Itinerary</button>
+  <button type="button" class="tab{% if view == 'c' %} active{% endif %}"
+          {% if view == 'c' %}aria-current="page"{% endif %}
+          hx-post="{{ url_for('game.switch_view') }}" hx-vals='{"view": "c"}'>Challenges
+    {% if view == 'b' and new_count %}<span class="badge">{{ new_count }} new</span>{% endif %}</button>
+</nav>
