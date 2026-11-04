@@ -4,7 +4,7 @@
 steps:
   - id: place-bellecour
     location: {kind: text, text: "Statue of Louis XIV, Place Bellecour"}
-    code: "4821"
+    code: "1337"
     unlocks: [selfie-statue]
     points: 2
     challenges:
@@ -23,7 +23,7 @@ steps:
 
   - id: place-terreaux
     location: {kind: minimap, lat: 45.7676, lon: 4.8338, label: "Place des Terreaux"}
-    code: "0420"
+    code: "1337"
     unlocks: [fountain-pose]
     riddle:
       text: "What is the name of the sculptor of the fountain?"
