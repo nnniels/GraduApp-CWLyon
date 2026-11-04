@@ -43,6 +43,18 @@ Passwords are in `./content/teams` and `./content/steps`.
 flask show-events --team team-1 --tail 50
 ```
 
+## Reset
+
+Back to the pre-game state: all teams `NOT_STARTED`, ticks and event log erased. Content, teams, join codes and the general-challenges deadline are kept.
+
+```powershell
+flask reset-game            # asks for confirmation
+flask reset-game --names    # also restores team names from content/teams.yaml
+flask reset-game --yes      # no prompt
+```
+
+State lives in one SQLite file, `instance/graduapp.sqlite` (team names included, in `team.name`).
+
 ## Test
 
 ```powershell
