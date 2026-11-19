@@ -13,7 +13,7 @@ PULL=0; YES=0
 for a in "$@"; do
   case "$a" in
     --pull) PULL=1 ;;
-    -- pip) PIP=1 ;; 
+    --pip) PIP=1 ;; 
     --yes) YES=1 ;;
     *) echo "Unknown option: $a" >&2; exit 2 ;;
   esac
