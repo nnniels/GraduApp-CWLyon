@@ -3,3 +3,4 @@
 teams:
   - {id: team-1, name: "Team 1", itinerary: itinerary-a, join_code: "TEAM1-7342"}
   - {id: team-2, name: "Team 2", itinerary: itinerary-b, join_code: "TEAM2-9051"}
+  - {id: team-3, name: "Team 3", itinerary: itinerary-c, join_code: "TEAM3-1151"}
