@@ -17,3 +17,6 @@ def connect(path: str) -> sqlite3.Connection:
 
 def init_db(conn: sqlite3.Connection) -> None:
     conn.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
+    # Databases created before `fun_fact` existed.
+    if "fun_fact" not in {r["name"] for r in conn.execute("PRAGMA table_info(step)")}:
+        conn.execute("ALTER TABLE step ADD COLUMN fun_fact TEXT")

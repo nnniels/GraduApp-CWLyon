@@ -11,5 +11,8 @@
           sandbox="allow-scripts allow-same-origin"></iframe>
   <a class="btn" href="{{ location.link }}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
 {% endif %}
+{% if step.fun_fact %}
+  <p class="fun-fact"><strong>Fun fact:</strong> {{ step.fun_fact }}</p>
+{% endif %}
 </div>
 <button class="btn-accent" hx-get="{{ url_for('game.arrive_form') }}" hx-disabled-elt="this">I am here</button>

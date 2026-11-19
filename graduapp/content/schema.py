@@ -41,6 +41,7 @@ class Step:
     points: int
     riddle: Riddle | None
     challenges: StepChallenges | None
+    fun_fact: str | None = None
 
 
 @dataclass(frozen=True)
@@ -152,7 +153,7 @@ def build_content(steps_raw, general_raw, itineraries_raw, teams_raw) -> Content
         sid = raw.get("id")
         if _is_str(sid):
             where = f"step '{sid}'"
-        check_keys(raw, {"id", "location", "code", "unlocks", "points", "riddle", "challenges"}, where)
+        check_keys(raw, {"id", "location", "code", "unlocks", "points", "fun_fact", "riddle", "challenges"}, where)
         if not _is_str(sid):
             errors.append(f"{where}: 'id' must be a non-empty string")
             continue
@@ -167,6 +168,11 @@ def build_content(steps_raw, general_raw, itineraries_raw, teams_raw) -> Content
         points = raw.get("points", 0)
         if not _is_int(points, 0):
             errors.append(f"{where}: 'points' must be an integer >= 0")
+
+        fun_fact = raw.get("fun_fact")
+        if fun_fact is not None and not _is_str(fun_fact):
+            errors.append(f"{where}: 'fun_fact' must be a non-empty string when present")
+            fun_fact = None
 
         unlocks = raw.get("unlocks") or []
         if not isinstance(unlocks, list):
@@ -207,7 +213,7 @@ def build_content(steps_raw, general_raw, itineraries_raw, teams_raw) -> Content
                     challenges = StepChallenges(c["k"], c["duration_s"], tuple(items))
 
         if loc and _is_str(raw.get("code")) and _is_int(points, 0) and (riddle or challenges):
-            steps[sid] = Step(sid, loc, raw["code"], tuple(unlocks), points, riddle, challenges)
+            steps[sid] = Step(sid, loc, raw["code"], tuple(unlocks),             points, riddle, challenges, fun_fact)
 
     itineraries: dict[str, Itinerary] = {}
     for i, raw in enumerate(itineraries_raw or []):

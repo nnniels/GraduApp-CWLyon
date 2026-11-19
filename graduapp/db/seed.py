@@ -43,18 +43,20 @@ def seed(conn: sqlite3.Connection, content: Content, force: bool = False) -> Non
             r, c = s.riddle, s.challenges
             conn.execute(
                 "INSERT INTO step (id, location_kind, location_json, code, kind, riddle_text, "
-                "riddle_image, challenge_k, challenge_duration_s, points) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+                "riddle_image, challenge_k,                 challenge_duration_s, points, fun_fact) "
+                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
                 "ON CONFLICT (id) DO UPDATE SET location_kind = excluded.location_kind, "
                 "location_json = excluded.location_json, code = excluded.code, kind = excluded.kind, "
                 "riddle_text = excluded.riddle_text, riddle_image = excluded.riddle_image, "
                 "challenge_k = excluded.challenge_k, "
-                "challenge_duration_s = excluded.challenge_duration_s, points = excluded.points",
+                "challenge_duration_s = excluded.challenge_duration_s, points = excluded.points, "
+                "fun_fact = excluded.fun_fact",
                 (
                     s.id, s.location["kind"], json.dumps(s.location), s.code,
                     "riddle" if r else "challenges",
                     r.text if r else None, r.image if r else None,
                     c.k if c else None, c.duration_s if c else None, s.points,
+                    s.fun_fact,
                 ),
             )
 

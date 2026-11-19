@@ -1,10 +1,12 @@
 # Library of steps. An itinerary only lists step ids, so a step can be shared between itineraries.
 # Exactly one of `riddle` or `challenges` per step. Codes are validated by the supervisor: keep them quoted.
 # location.kind: text (text) | maps_link (url) | minimap (lat, lon). `label` is optional.
+# Optional `fun_fact: "..."` (quoted string) is shown under the directions on the "Go to" screen.
 steps:
   - id: place-bellecour
     location: {kind: text, text: "Statue of Louis XIV, Place Bellecour"}
     code: "1337"
+    fun_fact: "At about 300 m by 200 m, Place Bellecour is one of the largest open squares in Europe."
     unlocks: [find-communist-poster]
     points: 2
     challenges:

@@ -59,6 +59,15 @@ def break_it(mutate):
     return "\n".join(exc.value.errors)
 
 
+def test_fun_fact_is_optional_and_validated():
+    data = raw()
+    data["steps_raw"][0]["fun_fact"] = "Did you know?"
+    content = build_content(**data)
+    assert content.steps["s1"].fun_fact == "Did you know?"
+    assert content.steps["s2"].fun_fact is None
+    assert "fun_fact" in break_it(lambda d: d["steps_raw"][0].update(fun_fact=""))
+
+
 def test_k_greater_than_items():
     assert "'k'" in break_it(lambda d: d["steps_raw"][0]["challenges"].update(k=2))
 
