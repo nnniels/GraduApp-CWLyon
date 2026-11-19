@@ -5,7 +5,7 @@ steps:
   - id: place-bellecour
     location: {kind: text, text: "Statue of Louis XIV, Place Bellecour"}
     code: "1337"
-    unlocks: [selfie-statue]
+    unlocks: [find-communist-poster]
     points: 2
     challenges:
       k: 2
