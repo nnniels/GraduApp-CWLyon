@@ -172,7 +172,8 @@ def _context(conn, team_id, events=(), popup=None, popup_ctx=None) -> dict:
             todo=todo,
             done=done,
             general_open=_general_open(conn, now),
-            general_total=repo.count_general_challenges(conn),
+            # Only the challenges this team can see, so "N of M" matches the list below.
+            visible_total=len(todo) + len(done),
         )
 
     if any(e.type == E.CODE_REJECTED for e in events):

@@ -3,13 +3,13 @@
     <img class="brand-title" src="{{ url_for('player.brand', name='title') }}" alt="GraduApp">
     <img class="skyline" src="{{ url_for('player.brand', name='skyline') }}" alt="">
     <div class="team-box slot-{{ slot }}">
-      <h1>{{ team.name }}</h1>
+      <p><span class="team-tag slot-{{ slot }}">{{ team.name }}</span></p>
       {% include "partials/phase_start.html" %}
     </div>
   {% else %}
-    <header class="game-header">
+  <header class="game-header">
       <img class="brand-small" src="{{ url_for('player.brand', name='title') }}" alt="GraduApp">
-      <h1>{{ team.name }}</h1>
+      <span class="team-tag slot-{{ slot }}">{{ team.name }}</span>
     </header>
     {% include "partials/toggle.html" %}
 
