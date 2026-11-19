@@ -1,8 +1,15 @@
 # Install on the Linux laptop
 
+The aim of this document is to log how to install the GraduApp locally, on a Linux laptop.
+Date : November 2026
+
 From `git clone` to a service that survives reboots. Replace `<you>` with your Linux user and `game.example.com` with your domain.
 
-Layers, bottom to top: **app (gunicorn, 127.0.0.1:8000) → tunnel (cloudflared) → Cloudflare → phones**. No inbound port is opened on the laptop.
+Layers, bottom to top: **app (gunicorn, 127.0.0.1:8000) → tunnel (cloudflared) → Cloudflare → phones**. 
+Some key aspects :
+- No inbound port is opened on the laptop.
+- Phones do not have to be on the same local network. The cloudflare tunnel expose the app to the internet at large.
+- A domain (eg `website.net`) is required to set-up the cloudflare tunnel.
 
 ## 1. Get the code
 
@@ -11,19 +18,27 @@ git clone <repo-url> ~/GraduApp-CWLyon
 cd ~/GraduApp-CWLyon
 ```
 
+Note : originally, the code was Git-ed on an Azure repo, private owned. A second remote was added to a personnal Github.
+
 ## 2. Python environment
 
+This assumes that the Linux laptop has `python` and `pip` installed.
+Note : _do NOT apt-install gunicorn_.
+Command to run at the repo root.
+
 ```bash
-sudo apt install python3 python3-venv     # do NOT apt-install gunicorn
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -e ".[prod]"                  # app + gunicorn, inside the venv
+python3 -m venv .venv                     # create a venv for this project
+. .venv/bin/activate                      # activate it
+pip install -e ".[prod]"                  # install all the requirements (app + gunicorn), inside the venv
 which gunicorn                            # must be .../GraduApp-CWLyon/.venv/bin/gunicorn
 ```
 
-Why: the system gunicorn uses the system Python, which has no Flask. If bash still calls an old path, run `hash -r`.
+Why: the system gunicorn uses the system Python, which has no Flask. If bash still calls an old path, run `hash -r` to reset the path cache.
 
 ## 3. Configuration
+
+
+Start by copying the dummy `.env.exemple` file (included in the repo) to the final `.env` path. Then, fill it with real secrets.
 
 ```bash
 cp .env.example .env
@@ -55,7 +70,7 @@ Creates `instance/graduapp.sqlite` from the YAML in `content/`.
 
 ```bash
 gunicorn --workers 1 --threads 4 --bind 127.0.0.1:8000 wsgi:app
-curl -I http://127.0.0.1:8000/            # expect 200
+curl -I http://127.0.0.1:8000/            # try to reach the app. Expect code 200
 ```
 
 Keep `--workers 1`: rate-limit counters live in memory, and more workers would multiply the limits. Stop with Ctrl+C.
