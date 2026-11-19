@@ -12,7 +12,10 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "")
     DATABASE_PATH = os.environ.get("DATABASE_PATH", "instance/graduapp.sqlite")
     CONTENT_DIR = os.environ.get("CONTENT_DIR", "content")
-    ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
+    ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")  # empty or "change-me" disables /admin
+    ADMIN_SESSION_LIFETIME = timedelta(hours=8)
+    ADMIN_LOGIN_RATE_LIMIT = "5 per 10 minutes"  # wrong passwords only, per client IP
+    DISPLAY_TZ = os.environ.get("DISPLAY_TZ", "Europe/Paris")  # times are stored in UTC
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
     # Set COOKIE_SECURE=1 behind the HTTPS tunnel. Leave it off for plain-HTTP tests on the LAN.

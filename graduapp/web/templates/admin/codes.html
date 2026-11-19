@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% set tab = 'codes' %}
+{% block title %}Codes{% endblock %}
+{% block admin %}
+{% for it_id, title, steps in itineraries %}
+<div class="card">
+  <strong>{{ title }}</strong> ({{ it_id }})
+  <table>
+    <tr><th>#</th><th>Location</th><th>Code</th></tr>
+    {% for s in steps %}
+    <tr><td>{{ s.position + 1 }}</td><td>{{ s.label|truncate(60) }} ({{ s.kind }})</td><td><strong>{{ s.code }}</strong></td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endfor %}
+
+<div class="card">
+  <strong>Join codes</strong>
+  <table>
+    <tr><th>Team</th><th>Code</th></tr>
+    {% for team, code in join_codes %}
+    <tr><td>{{ team.name }} ({{ team.id }})</td><td><strong>{{ code }}</strong></td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

@@ -29,6 +29,7 @@ def app(db_path):
             "SECRET_KEY": "test-key",
             "DATABASE_PATH": db_path,
             "CONTENT_DIR": str(CONTENT_DIR),  # for `flask reset-game --names`
+            "ADMIN_PASSWORD": "test-password",
         }
     )
     limiter.reset()  # the limiter is module-level: start every test with empty counters

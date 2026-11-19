@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block main_attrs %} class="wide"{% endblock %}
+{% block content %}
+<nav class="admin-nav" aria-label="Organiser">
+  <a href="{{ url_for('admin.teams') }}"{% if tab == 'teams' %} aria-current="page"{% endif %}>Teams</a>
+  <a href="{{ url_for('admin.log_page') }}"{% if tab == 'log' %} aria-current="page"{% endif %}>Log</a>
+  <a href="{{ url_for('admin.codes') }}"{% if tab == 'codes' %} aria-current="page"{% endif %}>Codes</a>
+  <form method="post" action="{{ url_for('admin.logout') }}"><button class="secondary" type="submit">Log out</button></form>
+</nav>
+{% block admin %}{% endblock %}
+{% endblock %}

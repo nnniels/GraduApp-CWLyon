@@ -18,4 +18,5 @@
 {% else %}
 <p>No team yet. Run <code>flask seed</code> first.</p>
 {% endfor %}
+{% if admin_enabled %}<p class="admin-link"><a href="{{ url_for('admin.login') }}" aria-label="Organiser">&#9881;</a></p>{% endif %}
 {% endblock %}

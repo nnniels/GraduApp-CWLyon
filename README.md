@@ -77,6 +77,18 @@ Do not run the manual gunicorn while the service is running: both want port 8000
 
 Reset the game while serving (as your own user, `.env` loaded): `flask --app graduapp reset-game`. No restart needed.
 
+## Organiser view
+
+Open `/admin` (or the discreet gear under the team list on screen A) and log in with `ADMIN_PASSWORD`. Empty or `change-me` disables the view (404). The session lasts 8 hours; use the Log out button.
+
+| Tab | Content |
+|---|---|
+| Teams | Phase, step, next code, score, wrong codes, last event. Click a team for what it typed. Sets or removes the general-challenges deadline (entered in `DISPLAY_TZ`). |
+| Log | Events newest first, filter by team, "Older events" paging |
+| Codes | Validation codes per itinerary, plus join codes |
+
+CSV (comma separated, UTF-8 with BOM): `/admin/events.csv` and `/admin/answers.csv`. Pages are read-only and refreshed by reloading. After pulling this version, run `pip install -e ".[prod]"` again (new dependency `tzdata`).
+
 ## Log
 
 

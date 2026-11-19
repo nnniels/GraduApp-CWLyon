@@ -24,6 +24,10 @@ def create_app(config: dict | None = None) -> Flask:
         log.warning("SECRET_KEY not set: using an insecure development key")
         app.config["SECRET_KEY"] = "insecure-development-key"
 
+    from zoneinfo import ZoneInfo
+
+    ZoneInfo(app.config["DISPLAY_TZ"])  # fail at boot, not on the first admin page
+
     from .cli import reset_game_command, seed_command, show_events_command
     from .web import db
     from .web.auth import limiter

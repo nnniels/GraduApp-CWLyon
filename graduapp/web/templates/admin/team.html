@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+{% set tab = 'teams' %}
+{% block title %}{{ report.team.name }}{% endblock %}
+{% macro answer(a) %}
+<li>
+  {% if a.prompt %}<em>{{ a.prompt }}</em><br>{% endif %}
+  <strong>{{ a.text }}</strong>
+  <small>({{ a.ts|local }}){% if a.lost %} - <span class="fail">no points (failed step)</span>{% endif %}</small>
+</li>
+{% endmacro %}
+{% block admin %}
+<p><a href="{{ url_for('admin.teams') }}">&larr; Teams</a></p>
+<h1>{{ report.team.name }}</h1>
+<p>Score {{ score.total }} (general {{ score.general }}, steps {{ score.steps }})</p>
+
+{% for step in report.steps if step.rows or step.outcome %}
+<div class="card">
+  <strong>{{ step.label|truncate(80) }}</strong> - {{ step.outcome or 'in progress' }}
+  <ul>{% for a in step.rows %}{{ answer(a) }}{% else %}<li>nothing typed</li>{% endfor %}</ul>
+</div>
+{% else %}
+<p>Nothing yet.</p>
+{% endfor %}
+
+<div class="card">
+  <strong>General challenges ticked</strong>
+  <ul>{% for a in report.general %}{{ answer(a) }}{% else %}<li>none</li>{% endfor %}</ul>
+</div>
+<p><a href="{{ url_for('admin.log_page', team=report.team.id) }}">Event log of this team</a></p>
+{% endblock %}

@@ -1,6 +1,6 @@
 # Organiser view (step 8): architecture, UX, design choices, requirements
 
-Status: **design recap, nothing implemented yet.** The organiser view comes after the Cloudflare setup.
+Status: **implemented** (full pages instead of HTMX partials, no polling: reload to refresh; CSV uses a comma). Cloudflare Access on `/admin` and `/admin/*` is still to be configured (step 9).
 
 Items marked **(assumed)** were proposed but never explicitly answered. Confirm or change them before coding.
 
@@ -12,7 +12,7 @@ A pure utility for the organiser, usable on a phone or a laptop. No effort goes 
 |---|---|
 | Read-only monitoring of all teams | Riddle grading (needs a new review table and scoring rules) |
 | Event log, riddle answers, challenge notes | Reset or force-advance of a team (stays in the CLI, `flask reset-game`) |
-| Validation codes and join codes | Roles (one shared password) **(assumed)** |
+| Validation codes and join codes | Roles (one shared password) |
 | CSV exports | A "not in a team" check (rejected, see section 4) |
 | Setting the general-challenges deadline | |
 
@@ -29,7 +29,8 @@ Two independent layers protect `/admin`:
 | Layer | Role | Where |
 |---|---|---|
 | **Cloudflare Access** | Keeps bots and strangers out before they reach the app | Cloudflare dashboard, rule on the `/admin*` path (step 9) |
-| **App password** | Still required inside the app, so the app is safe on the LAN, in dev, and if Access is misconfigured | `web/auth.py` |
+| **App password** | Still required inside the app, so the app is safe on the LAN, in dev, and if Access is misconfigured | `web/auth.py`, password in .env |
+Rate limit, as included in Flask-Limiter.
 
 Layering follows the project rule `web -> db -> engine`:
 
@@ -76,14 +77,14 @@ The admin session is **independent of the team session**. Today `login()` in `we
 | Empty password | **Never accepted, anywhere** | If `ADMIN_PASSWORD` is empty or still `change-me`, `/admin` answers 404 and login is impossible. The password comparison is constant-time. |
 | Rate-limit key for the login | `CF-Connecting-IP`, trusted **only** when the request comes from loopback | Behind the tunnel every request is `127.0.0.1`, so a per-IP key locks everybody out. A global limit would let an attacker lock the organiser out. Cloudflare overwrites that header, and the app listens on localhost only. Falls back to the remote address in dev. |
 | Tab layout | 3 tabs with a drill-down for answers | Fits a 390 px screen. Monitoring (live) and review (a long document) are different jobs. |
-| Entry point | Small link on screen A **and** the `/admin` URL **(assumed)** | The link is a convenience. The URL is the real entrance. |
+| Entry point | Small link on screen A **and** the `/admin` URL  | The link is a convenience. The URL is the real entrance. |
 | Refresh | HTMX polling, 10 s | 5 teams means trivial load. |
 | Timezone | Server-side `DISPLAY_TZ` (default `Europe/Paris`) | One place decides, and the CSV matches the screen. Times are stored in UTC. |
-| CSV format | `;` separator, UTF-8 with BOM **(assumed)** | French Excel mangles commas and accents otherwise. `.xlsx` would add a dependency. |
+| CSV format | `,` separator, UTF-8 with BOM  | No injection through team name. `.xlsx` would add a dependency. |
 | CSV safety | Cells starting with `=`, `+`, `-` or `@` get a leading `'` | Players type free text. A note starting with `=` would run as a formula in Excel. |
 | Step names | Location label, else location text, else step id | Steps have no title, and there is no migration system, so no schema change. |
 | Deadline setting | A card on the Teams tab, saved through the existing `repo.set_general_deadline` | The one missing piece from step 4: today it can only be set in code. |
-| Audit of the deadline change | Optional small `admin_action` table, created automatically | The `event` table requires a team id, and changing that column needs a table rebuild. **Not decided.** |
+| Audit of the deadline change | Optional small `admin_action` table, created automatically | The `event` table requires a team id, and changing that column needs a table rebuild. **Not to do yet.** |
 | Look and feel | Plain, no polish | Pure utility. |
 
 ## 5. Requirements
@@ -105,7 +106,9 @@ The admin session is **independent of the team session**. Today `login()` in `we
 12. The Log is newest first, filterable by team, capped, with readable sentences.
 13. The Codes tab lists the ordered steps per itinerary with codes, plus join codes.
 14. CSV exports of events and of answers, in the format above.
-15. The organiser can set and clear the general-challenges deadline. The value is shown in local time, and an invalid value is rejected.
+15. The organiser can set and clear the general-challenges deadline. The value is shown in local time (Paris time), and an invalid value is rejected.
+
+Refresh is made through the browser interface, no need to add this feature.
 
 ### Non-functional
 16. Usable on a phone (cards) and on a laptop (plain tables), without a dedicated desktop layout.
@@ -128,8 +131,3 @@ The admin session is **independent of the team session**. Today `login()` in `we
 
 Suggested order: auth and login, then Teams tab, then Log and CSV, then Codes, then the deadline setting, then the screen A link and the hardening tests.
 
-## 7. Open points
-
-- **Confirm the assumed items** in section 1 and section 4: single password, link plus URL, CSV format, read-only plus deadline.
-- **`admin_action` audit table:** keep or drop.
-- **Cloudflare first:** the tunnel, the named domain and the Access rule on `/admin*` come before this step is built. The app-level login is still required either way.

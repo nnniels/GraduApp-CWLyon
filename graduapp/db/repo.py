@@ -438,6 +438,30 @@ def list_events(conn: sqlite3.Connection, team_id: str | None = None) -> list[Lo
         for r in conn.execute(sql + " ORDER BY id", args)
     ]
 
+def list_events_page(
+    conn: sqlite3.Connection,
+    team_id: str | None = None,
+    before_id: int | None = None,
+    limit: int = 200,
+) -> list[LoggedEvent]:
+    """Newest first. Pass the id of the last row as `before_id` to get the next page."""
+    where, args = [], []
+    if team_id is not None:
+        where.append("team_id = ?")
+        args.append(team_id)
+    if before_id is not None:
+        where.append("id < ?")
+        args.append(before_id)
+    sql = "SELECT * FROM event"
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    rows = conn.execute(sql + " ORDER BY id DESC LIMIT ?", (*args, limit))
+    return [
+        LoggedEvent(r["id"], r["team_id"], r["type"], json.loads(r["payload_json"]), _parse(r["ts"]))
+        for r in rows
+    ]
+
+
 def load_events(conn: sqlite3.Connection, team_id: str) -> list[Event]:
     return [
         Event(r["type"], json.loads(r["payload_json"]), _parse(r["ts"]))
@@ -448,3 +472,170 @@ def load_events(conn: sqlite3.Connection, team_id: str) -> list[Event]:
 def get_score(conn: sqlite3.Connection, team_id: str) -> Score:
     team = _team_row(conn, team_id)
     return compute_score(load_events(conn, team_id), load_course(conn, team["itinerary_id"]))
+
+
+# Organiser view. Read-only, and it deliberately exposes validation and join codes:
+# only web/admin.py may call the functions below.
+
+@dataclass(frozen=True)
+class TeamOverview:
+    id: str
+    name: str
+    itinerary_id: str
+    phase: Phase
+    step_index: int
+    n_steps: int
+    step_label: str | None
+    code: str | None  # the code the team has to enter next
+    deadline: datetime | None
+    score: Score
+    ticked: int
+    k: int
+    wrong_codes: int
+    last_activity: datetime | None
+
+
+@dataclass
+class AnswerRow:
+    ts: datetime
+    scope: str  # "riddle", "step" or "general"
+    challenge_id: str | None
+    prompt: str
+    text: str
+    lost: bool = False  # ticked in a step that failed: brings no points
+
+
+@dataclass
+class StepReport:
+    step_id: str
+    label: str
+    outcome: str | None  # "succeeded", "failed", or None while not closed
+    rows: list[AnswerRow]
+
+
+@dataclass(frozen=True)
+class TeamReport:
+    team: TeamInfo
+    steps: list[StepReport]
+    general: list[AnswerRow]
+
+
+@dataclass(frozen=True)
+class CodeRow:
+    position: int
+    step_id: str
+    label: str
+    kind: str
+    code: str
+
+
+def step_labels(conn: sqlite3.Connection) -> dict[str, str]:
+    """Location label, else location text, else the step id: steps have no title."""
+    labels = {}
+    for r in conn.execute("SELECT id, location_json FROM step"):
+        loc = json.loads(r["location_json"])
+        labels[r["id"]] = loc.get("label") or loc.get("text") or r["id"]
+    return labels
+
+
+def all_challenge_texts(conn: sqlite3.Connection) -> dict[str, str]:
+    return {r["id"]: r["text"] for r in conn.execute("SELECT id, text FROM challenge")}
+
+
+def list_overview(conn: sqlite3.Connection) -> list[TeamOverview]:
+    labels = step_labels(conn)
+    wrong = {
+        r["team_id"]: r["n"]
+        for r in conn.execute(
+            "SELECT team_id, COUNT(*) AS n FROM event WHERE type = ? GROUP BY team_id",
+            (EventType.CODE_REJECTED,),
+        )
+    }
+    last = {
+        r["team_id"]: _parse(r["last"])
+        for r in conn.execute("SELECT team_id, MAX(ts) AS last FROM event GROUP BY team_id")
+    }
+    rows = []
+    for team in list_teams(conn):
+        course = load_course(conn, team.itinerary_id)
+        state = _load_state(conn, team.id, course)
+        current = course.steps[state.step_index] if state.step_index < len(course.steps) else None
+        waiting = state.phase in (Phase.NOT_STARTED, Phase.GOING)
+        in_challenges = state.phase == Phase.CHALLENGES
+        rows.append(
+            TeamOverview(
+                id=team.id,
+                name=team.name,
+                itinerary_id=team.itinerary_id,
+                phase=state.phase,
+                step_index=state.step_index,
+                n_steps=len(course.steps),
+                step_label=labels[current.id] if current else None,
+                code=current.code if current and waiting else None,
+                deadline=state.phase_deadline,
+                score=get_score(conn, team.id),
+                ticked=len(state.step_ticked) if in_challenges else 0,
+                k=current.k if current and in_challenges else 0,
+                wrong_codes=wrong.get(team.id, 0),
+                last_activity=last.get(team.id),
+            )
+        )
+    return rows
+
+
+def get_team_report(conn: sqlite3.Connection, team_id: str) -> TeamReport:
+    """What the team typed, by step, rebuilt from the event log (unticked notes are dropped)."""
+    team = _info(_team_row(conn, team_id))
+    course = load_course(conn, team.itinerary_id)
+    labels = step_labels(conn)
+    challenges = all_challenge_texts(conn)
+    riddles = {r["id"]: r["riddle_text"] for r in conn.execute("SELECT id, riddle_text FROM step")}
+    steps = {s.id: StepReport(s.id, labels[s.id], None, []) for s in course.steps}
+    general: list[AnswerRow] = []
+
+    for e in load_events(conn, team_id):
+        p = e.payload
+        if e.type == EventType.RIDDLE_ANSWERED:
+            steps[p["step_id"]].rows.append(
+                AnswerRow(e.ts, "riddle", None, riddles.get(p["step_id"]) or "", p["text"])
+            )
+        elif e.type == EventType.CHALLENGE_TICKED:
+            row = AnswerRow(
+                e.ts, p["scope"], p["challenge_id"], challenges.get(p["challenge_id"], ""), p["text"]
+            )
+            (general if p["scope"] == "general" else steps[p["step_id"]].rows).append(row)
+        elif e.type == EventType.CHALLENGE_UNTICKED:
+            target = general if p["scope"] == "general" else steps[p["step_id"]].rows
+            target[:] = [r for r in target if r.challenge_id != p["challenge_id"]]
+        elif e.type == EventType.STEP_SUCCEEDED:
+            steps[p["step_id"]].outcome = "succeeded"
+        elif e.type == EventType.STEP_FAILED:
+            step = steps[p["step_id"]]
+            step.outcome = "failed"
+            for r in step.rows:
+                r.lost = r.scope == "step"
+    return TeamReport(team, list(steps.values()), general)
+
+
+def list_itinerary_codes(conn: sqlite3.Connection) -> list[tuple[str, str, list[CodeRow]]]:
+    """(itinerary id, title, ordered steps with their validation codes)."""
+    labels = step_labels(conn)
+    out = []
+    for it in conn.execute("SELECT id, title FROM itinerary ORDER BY id"):
+        rows = [
+            CodeRow(r["position"], r["id"], labels[r["id"]], r["kind"], r["code"])
+            for r in conn.execute(
+                "SELECT i.position, s.id, s.kind, s.code FROM itinerary_step i "
+                "JOIN step s ON s.id = i.step_id WHERE i.itinerary_id = ? ORDER BY i.position",
+                (it["id"],),
+            )
+        ]
+        out.append((it["id"], it["title"], rows))
+    return out
+
+
+def list_join_codes(conn: sqlite3.Connection) -> list[tuple[TeamInfo, str]]:
+    return [
+        (_info(r), r["join_code"])
+        for r in conn.execute("SELECT * FROM team ORDER BY id")
+    ]

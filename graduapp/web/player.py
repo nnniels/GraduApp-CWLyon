@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from flask import Blueprint, current_app, redirect, render_template, request, url_for
 
 from ..db import repo
-from .auth import join_key, limiter, login, current_team
+from .auth import admin_enabled, join_key, limiter, login, current_team
 from .db import get_db
 from .game import render_game_page
 
@@ -12,7 +12,13 @@ bp = Blueprint("player", __name__)
 
 def _select_page(error: str | None = None, error_team: str | None = None, status: int = 200):
     teams = repo.list_teams(get_db())
-    page = render_template("pages/team_select.html", teams=teams, error=error, error_team=error_team)
+    page = render_template(
+        "pages/team_select.html",
+        teams=teams,
+        error=error,
+        error_team=error_team,
+        admin_enabled=admin_enabled(),
+    )
     return page, status
 
 
@@ -58,6 +64,8 @@ def join():
 
 @bp.app_errorhandler(429)
 def too_many_attempts(_error):
+    if request.path.startswith("/admin"):
+        return "Too many attempts. Wait a few minutes.", 429
     return _select_page(
         "Too many wrong codes for this team. Wait a few minutes.",
         request.form.get("team_id", ""),

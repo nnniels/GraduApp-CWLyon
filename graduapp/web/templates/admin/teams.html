@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+{% set tab = 'teams' %}
+{% block title %}Teams{% endblock %}
+{% block admin %}
+<form class="card" method="post" action="{{ url_for('admin.set_deadline') }}">
+  <strong>General challenges deadline</strong>
+  <p>{% if deadline %}{{ deadline|local }} - {{ 'open' if now < deadline else 'closed' }}{% else %}none (always open){% endif %}</p>
+  <label>New deadline
+    <input type="datetime-local" name="deadline" value="{{ deadline|local('%Y-%m-%dT%H:%M') if deadline else '' }}">
+  </label>
+  {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+  <button type="submit">Set</button>
+  <button type="submit" name="action" value="clear" class="secondary">Remove deadline</button>
+</form>
+
+<p>Last activity is the last event, not the last connection.
+  <a href="{{ url_for('admin.answers_csv') }}">answers.csv</a></p>
+
+{% for r in rows %}
+<div class="card">
+  <strong><a href="{{ url_for('admin.team', team_id=r.id) }}">{{ r.name }}</a></strong>
+  <span>({{ r.id }}, {{ r.itinerary_id }})</span><br>
+  Phase: <strong>{{ r.phase.value }}</strong>
+  {% if r.step_label %}- step {{ r.step_index + 1 }}/{{ r.n_steps }}: {{ r.step_label|truncate(60) }}{% endif %}<br>
+  {% if r.code %}Next code: <strong>{{ r.code }}</strong><br>{% endif %}
+  {% if r.deadline %}Step deadline: {{ r.deadline|local }}<br>{% endif %}
+  {% if r.k %}Challenges ticked: {{ r.ticked }}/{{ r.k }}<br>{% endif %}
+  Score: <strong>{{ r.score.total }}</strong> (general {{ r.score.general }}, steps {{ r.score.steps }};
+  {{ r.score.steps_succeeded }} ok, {{ r.score.steps_failed }} failed)<br>
+  Wrong codes: {{ r.wrong_codes }} - last activity: {{ r.last_activity|local }}
+</div>
+{% else %}
+<p>No team. Run <code>flask seed</code>.</p>
+{% endfor %}
+{% endblock %}
