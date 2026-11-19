@@ -20,7 +20,7 @@
 </div>
 {% endif %}
 
-<p class="progress-text">{{ done|length }} of {{ visible_total }} completed</p>
+<p class="progress">{{ done|length }} of {{ visible_total }} completed</p>
 {{ ui.meter(done|length, visible_total, 'green', 'Challenges completed') }}
 
 {% if not general_open %}<p class="notice">The challenges are closed. Hand in your photos to the gamemaster.</p>{% endif %}
@@ -32,7 +32,7 @@
   {% endfor %}
 </ul>
 
-<h3>Done ({{ done|length }})</h3>
+<h3 class="done-title">Done ({{ done|length }})</h3>
 <ul class="challenges done">
   {% for c in done %}{{ row(c, general_open, true) }}
   {% else %}<li><p>Nothing yet.</p></li>

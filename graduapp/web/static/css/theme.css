@@ -30,6 +30,7 @@
   --font-weight-bold: 800;
 
   --radius: 0.125rem;
+  --radius-soft: 0.5rem;
   --corner: 1.25rem;
   --edge-width: 1px;
 }
