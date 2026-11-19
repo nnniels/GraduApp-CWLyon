@@ -1,6 +1,6 @@
 # Teams, itinerary allocation and join codes (quoted!). `name` is only the initial name:
 # teams can rename themselves in the app, and re-seeding never overwrites it.
 teams:
-  - {id: team-1, name: "Team 1", itinerary: itinerary-a, join_code: "TEAM1-7342"}
-  - {id: team-2, name: "Team 2", itinerary: itinerary-b, join_code: "TEAM2-9051"}
-  - {id: team-3, name: "Team 3", itinerary: itinerary-c, join_code: "TEAM3-1151"}
+  - {id: team-1, name: "Team AR", itinerary: itinerary-a, join_code: "TEAM1-7342"}
+  - {id: team-2, name: "Team CD", itinerary: itinerary-b, join_code: "TEAM2-9051"}
+  - {id: team-3, name: "Team NA", itinerary: itinerary-c, join_code: "TEAM3-1151"}
