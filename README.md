@@ -77,6 +77,21 @@ Do not run the manual gunicorn while the service is running: both want port 8000
 
 Reset the game while serving (as your own user, `.env` loaded): `flask --app graduapp reset-game`. No restart needed.
 
+### Full reset from the laptop (one command)
+
+```bash
+chmod +x deploy/reset.sh      # once
+deploy/reset.sh               # asks for confirmation
+deploy/reset.sh --pull --yes  # also git pull 
+deploy/reset.sh --install     # also pip install first
+```
+
+Stops the service, backs up the DB to `backups/`, wipes it, 
+re-runs `flask seed` (team names, steps and challenges reloaded from `content/`), 
+then starts the service so new code, `.env` and content are picked up. 
+
+Edit `.env`/`content/` before running. Set `APP_DIR` if the app is not in `/opt/graduapp`. Needs passwordless or interactive `sudo` for `systemctl`.
+
 ## Organiser view
 
 Open `/admin` (or the discreet gear under the team list on screen A) and log in with `ADMIN_PASSWORD`. Empty or `change-me` disables the view (404). The session lasts 8 hours; use the Log out button.
