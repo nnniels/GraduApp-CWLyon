@@ -36,6 +36,47 @@ Then, if no error are thrown, open `http://127.0.0.1:5000` in web browser.
 
 Passwords are in `./content/teams` and `./content/steps`.
 
+## Run (Linux, production-like)
+
+Full install from `git clone`: [Docs/install_linux.md](Docs/install_linux.md). Commands below run from the repo root with the venv active (`. .venv/bin/activate`) and `.env` loaded (`set -a; . ./.env; set +a`).
+
+### 1. App by hand (gunicorn)
+
+```bash
+gunicorn --workers 1 --threads 4 --bind 127.0.0.1:8000 wsgi:app
+```
+
+Keep `--workers 1` (in-memory rate limits). Check: `curl -I http://127.0.0.1:8000/`. Use `tmux` so it survives a closed SSH session.
+
+### 2. Tunnel by hand
+
+```bash
+cloudflared tunnel run graduapp
+```
+
+Needs `~/.cloudflared/config.yml`. The app must already listen on 127.0.0.1:8000.
+
+### 3. As services (systemd)
+
+Units: `graduapp` (gunicorn) and `cloudflared` (tunnel).
+
+| Action | Command |
+|---|---|
+| Status | `systemctl status graduapp cloudflared` |
+| Start / stop | `sudo systemctl start graduapp` / `sudo systemctl stop graduapp` |
+| Restart (after editing `.env` or code) | `sudo systemctl restart graduapp` |
+| Start at boot: enable / disable | `sudo systemctl enable graduapp` / `sudo systemctl disable graduapp` |
+| Enable and start now | `sudo systemctl enable --now graduapp` |
+| Disable and stop now | `sudo systemctl disable --now graduapp` |
+| Logs (follow) | `journalctl -u graduapp -f` |
+| After editing the unit file | `sudo systemctl daemon-reload` then restart |
+
+Same commands for `cloudflared`. To go back to manual mode, `disable --now` both services, then use sections 1 and 2.
+
+Do not run the manual gunicorn while the service is running: both want port 8000.
+
+Reset the game while serving (as your own user, `.env` loaded): `flask --app graduapp reset-game`. No restart needed.
+
 ## Log
 
 
