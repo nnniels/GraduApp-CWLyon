@@ -1,11 +1,21 @@
 from datetime import datetime, timezone
 
-from flask import Blueprint, current_app, redirect, render_template, request, url_for
+from flask import (
+    Blueprint,
+    abort,
+    current_app,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+)
 
 from ..db import repo
 from .auth import admin_enabled, join_key, limiter, login, current_team
 from .db import get_db
-from .game import render_game_page
+from .game import images_folder, render_game_page
+from .theme import BRAND_IMAGES, team_slot
 
 bp = Blueprint("player", __name__)
 
@@ -14,12 +24,20 @@ def _select_page(error: str | None = None, error_team: str | None = None, status
     teams = repo.list_teams(get_db())
     page = render_template(
         "pages/team_select.html",
-        teams=teams,
+        teams=[(team, team_slot(i)) for i, team in enumerate(teams)],
         error=error,
         error_team=error_team,
         admin_enabled=admin_enabled(),
     )
     return page, status
+
+
+@bp.get("/brand/<name>")
+def brand(name: str):
+    """The title, skyline and flag images. Public: the team select page shows them before login."""
+    if name not in BRAND_IMAGES:
+        abort(404)
+    return send_from_directory(images_folder(), BRAND_IMAGES[name])
 
 
 @bp.get("/")

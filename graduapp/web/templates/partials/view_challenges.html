@@ -1,9 +1,12 @@
-{% macro row(c, open) %}
+{% import "partials/ui.html" as ui %}
+{% macro row(c, open, done) %}
 <li>
   {% if open %}
-  <button type="button" class="challenge" hx-get="{{ url_for('game.general_popup', challenge_id=c.id) }}">
-    {{ c.text }}{% if c.new %} <span class="new">NEW</span>{% endif %}
+  <button type="button" class="challenge{% if done %} ticked{% endif %}" hx-get="{{ url_for('game.general_popup', challenge_id=c.id) }}">
+    {% if done %}<span class="tick" aria-label="done">&#9745;</span> {% endif %}{{ c.text }}{% if c.new %} <span class="new">NEW</span>{% endif %}
   </button>
+  {% elif done %}
+  <div class="challenge ticked readonly"><span class="tick" aria-label="done">&#9745;</span> {{ c.text }}</div>
   {% else %}
   <div class="challenge readonly">{{ c.text }}</div>
   {% endif %}
@@ -17,18 +20,21 @@
 </div>
 {% endif %}
 
+<p class="progress-text">{{ done|length }} of {{ general_total }} completed</p>
+{{ ui.meter(done|length, general_total, 'green', 'Challenges completed') }}
+
 {% if not general_open %}<p class="notice">The challenges are closed. Hand in your photos to the gamemaster.</p>{% endif %}
 
 <h3>To do ({{ todo|length }})</h3>
 <ul class="challenges">
-  {% for c in todo %}{{ row(c, general_open) }}
+  {% for c in todo %}{{ row(c, general_open, false) }}
   {% else %}<li><p>Nothing left to do. New challenges appear as you reach new locations.</p></li>
   {% endfor %}
 </ul>
 
 <h3>Done ({{ done|length }})</h3>
 <ul class="challenges done">
-  {% for c in done %}{{ row(c, general_open) }}
+  {% for c in done %}{{ row(c, general_open, true) }}
   {% else %}<li><p>Nothing yet.</p></li>
   {% endfor %}
 </ul>

@@ -1,73 +1,120 @@
-body { font-family: system-ui, sans-serif; font-size: 1.125rem; margin: 0; line-height: 1.4; }
+/* Look and feel. Colours, fonts and radii come from theme.css only (load it first). */
+*, *::before, *::after { box-sizing: border-box; }
+body { font-family: var(--font-text); font-size: 1.125rem; margin: 0; line-height: 1.4;
+       background: var(--color-bg); color: var(--color-text); }
 main { padding: 1rem; max-width: 40rem; margin: 0 auto; }
-h1 { font-size: 1.5rem; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: var(--font-weight-bold);
+             text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.15; }
+h1 { font-size: 1.75rem; margin: 0.5rem 0 1rem; }
+h2 { font-size: 1.35rem; margin-top: 0; }
+h3 { font-size: 1.15rem; margin: 1.25rem 0 0.5rem; }
+a { color: var(--color-edge); }
 
-.card { border: 1px solid #ccc; border-radius: 0.75rem; padding: 1rem; margin-bottom: 1rem; }
-label { display: block; font-weight: 600; margin-bottom: 0.75rem; }
-input { display: block; box-sizing: border-box; width: 100%; margin-top: 0.25rem;
-        padding: 0.75rem; font-size: 1.125rem; border: 1px solid #888; border-radius: 0.5rem; }
-button { width: 100%; min-height: 3rem; font-size: 1.125rem; font-weight: 600;
-         border: 0; border-radius: 0.5rem; background: #1a56db; color: #fff; }
-.error { color: #b00020; font-weight: 600; }
-.ok { color: #1b6e2d; font-weight: 600; }
-.fail { color: #b00020; font-weight: 600; }
+.card { background: var(--color-surface); border: var(--edge-width) solid var(--color-edge);
+        border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; }
+label { display: block; font-weight: 700; margin-bottom: 0.75rem; }
+input, textarea { display: block; box-sizing: border-box; width: 100%; margin-top: 0.25rem;
+        padding: 0.75rem; font: inherit; font-size: 1.125rem; color: var(--color-text);
+        background: var(--color-surface-deep); border: var(--edge-width) solid var(--color-muted);
+        border-radius: var(--radius); }
+input:focus, textarea:focus { outline: 2px solid var(--color-edge); outline-offset: 1px; }
+.error, .fail { color: var(--color-danger); font-weight: 700; }
+.ok { color: var(--color-success); font-weight: 700; }
 
-a.button, button.secondary { display: block; box-sizing: border-box; width: 100%; min-height: 3rem;
-        margin: 0.75rem 0; padding: 0.75rem; text-align: center; text-decoration: none;
-        font-size: 1.125rem; font-weight: 600; border-radius: 0.5rem; }
-a.button.secondary, button.secondary { background: #fff; color: #1a56db; border: 2px solid #1a56db; }
-button.danger { background: #b00020; }
-button { margin: 0.75rem 0; }
-button:disabled { opacity: 0.6; }
-textarea { display: block; box-sizing: border-box; width: 100%; margin-top: 0.25rem; padding: 0.75rem;
-           font: inherit; border: 1px solid #888; border-radius: 0.5rem; }
+/* Buttons: rectangles with minimal rounding and thin light-blue edges.
+   .btn is the plain button (also what a bare <button> gets). .btn-accent is the main action. */
+button, .btn { display: block; box-sizing: border-box; width: 100%; min-height: 3rem; margin: 0.75rem 0;
+        padding: 0.75rem 1rem; font-family: var(--font-display); font-size: 1.15rem;
+        font-weight: var(--font-weight-bold); letter-spacing: 0.06em; text-transform: uppercase;
+        text-align: center; text-decoration: none; color: var(--color-text); cursor: pointer;
+        background: var(--color-surface-deep); border: var(--edge-width) solid var(--color-edge);
+        border-radius: var(--radius); }
+.btn-accent { background: var(--gradient-accent); }
+.btn-danger { background: var(--color-red); }
+button:disabled, .btn:disabled { opacity: 0.6; }
 
-.progress { color: #555; margin-top: -0.5rem; }
+.progress { color: var(--color-light-grey); margin: 0 0 0.5rem; font-weight: 700; }
 .location, .riddle, .proof { white-space: pre-line; font-size: 1.25rem; }
-.minimap { display: block; width: 100%; height: 16rem; border: 0; border-radius: 0.5rem; }
-.riddle-image { display: block; max-width: 100%; border-radius: 0.5rem; }
+/* The instruction the player must follow: white text with a dark red glow. */
+.instruction { text-shadow: 0 0 0.5rem var(--color-red), 0 0 0.15rem var(--color-red); }
+.meter { height: 0.75rem; margin: 0.5rem 0 1rem; overflow: hidden; background: var(--color-surface-deep);
+         border: 1px solid var(--color-muted); border-radius: var(--radius); }
+.meter > span { display: block; height: 100%; background: var(--meter-color); }
+.meter-green { --meter-color: var(--color-success); }
+.meter-purple { --meter-color: var(--color-progress-purple); }
+.meter-label { font-weight: 700; margin: 0.5rem 0 0; }
+.minimap { display: block; width: 100%; height: 16rem; border: 0; border-radius: var(--radius); }
+.riddle-image { display: block; max-width: 100%; border-radius: var(--radius); }
 .end { text-align: center; }
+.end img { display: block; margin: 0 auto; }
+
+/* Team boxes: squared, with the top right and bottom left corners rounded in the team colour. */
+.slot-1 { --team: var(--team-1); }
+.slot-2 { --team: var(--team-2); }
+.slot-3 { --team: var(--team-3); }
+.slot-4 { --team: var(--team-4); }
+.team-box { border: 2px solid var(--team); border-radius: 0 var(--corner) 0 var(--corner); }
+.separator { border: 0; height: 2px; margin: 1rem 0; background: var(--color-purple); }
+
+/* Brand: the title image, the skyline, and the smaller title used in the game. */
+.brand-title { display: block; width: 100%; max-width: 26rem; height: auto; margin: 0 auto; }
+.skyline { display: block; width: 100%; height: auto; margin: 0.5rem 0 1rem; }
+.game-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+.game-header h1 { margin: 0; font-size: 1.4rem; }
+.brand-small { flex: none; width: 4.5rem; height: auto; }
 
 .admin-link { text-align: center; margin-top: 2rem; }
-.admin-link a { display: inline-block; padding: 0.75rem 1.25rem; color: #999; text-decoration: none; }
+.admin-link a { display: inline-block; padding: 0.75rem 1.25rem; color: var(--color-muted); text-decoration: none; }
 main.wide { max-width: 70rem; }
 .admin-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }
-.admin-nav a { padding: 0.5rem 1rem; border: 2px solid #1a56db; border-radius: 0.5rem; text-decoration: none; }
-.admin-nav a[aria-current] { background: #1a56db; color: #fff; }
+.admin-nav a { padding: 0.5rem 1rem; color: var(--color-text); font-family: var(--font-display);
+               font-weight: var(--font-weight-bold); text-transform: uppercase; text-decoration: none;
+               border: var(--edge-width) solid var(--color-edge); border-radius: var(--radius); }
+.admin-nav a[aria-current] { background: var(--gradient-accent); }
 .admin-nav form { margin-left: auto; }
 .admin-nav button { width: auto; min-height: 2.5rem; margin: 0; padding: 0 1rem; }
 .scroll { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; }
-th, td { text-align: left; vertical-align: top; padding: 0.4rem 0.6rem; border-bottom: 1px solid #ddd; }
+th, td { text-align: left; vertical-align: top; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--color-surface); }
 
+/* Challenges: light-blue boxes; done ones get a green box and a green tick. */
 .challenges { list-style: none; padding: 0; margin: 0; }
 .challenges li { margin-bottom: 0.5rem; }
-button.challenge { margin: 0; text-align: left; background: #fff; color: #222;
-        border: 2px solid #ccc; padding: 0.75rem; }
-button.challenge.ticked { border-color: #1b6e2d; background: #eaf6ec; }
-.timer { margin: 1rem 0; padding: 0.75rem; text-align: center; font-size: 2rem; font-weight: 700;
-         font-variant-numeric: tabular-nums; border: 2px solid #1a56db; border-radius: 0.5rem; }
+.challenge { display: block; width: 100%; margin: 0; padding: 0.75rem 1rem; text-align: left;
+             text-transform: none; font-family: var(--font-text); font-size: 1.05rem; font-weight: 700;
+             color: var(--color-challenge-text); background: var(--color-light-blue);
+             border: 2px solid var(--color-light-blue); border-radius: var(--radius); }
+.challenge.ticked { color: var(--color-text); background: var(--color-done-bg); border-color: var(--color-success); }
+.challenge.readonly { cursor: default; }
+.tick { margin-right: 0.35rem; color: var(--color-success); font-weight: 900; }
+.timer { margin: 1rem 0; padding: 0.75rem; text-align: center; font-family: var(--font-display);
+         font-size: 2rem; font-weight: var(--font-weight-bold); font-variant-numeric: tabular-nums;
+         border: 2px solid var(--color-edge); border-radius: var(--radius); }
 
-.timer.urgent { color: #b00020; border-color: #b00020; }
+.timer.urgent { color: var(--color-danger); border-color: var(--color-danger); }
 
-/* Screen C: toggle, mini-timer, NEW markers */
+/* Screen B tabs: the selected one is white with a dark red glow; the other is light grey. */
 .toggle { display: flex; gap: 0.5rem; margin: 0 0 1rem; }
-button.tab { flex: 1; margin: 0; background: #fff; color: #1a56db; border: 2px solid #1a56db; }
-button.tab.active { background: #1a56db; color: #fff; }
-.badge, .new { display: inline-block; margin-left: 0.25rem; padding: 0.05rem 0.45rem; border-radius: 1rem;
-               font-size: 0.8rem; font-weight: 700; background: #ff9800; color: #222; }
+.toggle .tab { flex: 1; margin: 0; color: var(--color-light-grey); background: var(--color-surface);
+               border: 0; border-bottom: 3px solid transparent; }
+.toggle .tab.active { color: var(--color-text); border-bottom-color: var(--color-red);
+                      text-shadow: 0 0 0.6rem var(--color-red), 0 0 0.2rem var(--color-red); }
+/* New markers: gold and thick. */
+.badge, .new { display: inline-block; margin-left: 0.25rem; padding: 0.05rem 0.45rem; border-radius: var(--radius);
+               font-family: var(--font-display); font-size: 0.8rem; font-weight: 900; letter-spacing: 0.05em;
+               text-transform: uppercase; background: var(--color-gold); color: var(--color-challenge-text); }
 .mini-timer { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
-              margin-bottom: 1rem; padding: 0.5rem 0.75rem; border: 2px solid #1a56db; border-radius: 0.5rem; }
+              margin-bottom: 1rem; padding: 0.5rem 0.75rem; background: var(--color-surface);
+              border: 2px solid var(--color-edge); border-radius: var(--radius); }
 .timer.mini { margin: 0; padding: 0; border: 0; font-size: 1.5rem; }
-.timer.mini.urgent { color: #b00020; }
-h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
-.challenges.done button.challenge { background: #eaf6ec; border-color: #1b6e2d; }
-.challenge.readonly { padding: 0.75rem; border: 2px solid #ccc; border-radius: 0.5rem; background: #f4f4f4; }
-.notice { padding: 0.75rem; border-radius: 0.5rem; background: #fff3cd; }
+.timer.mini.urgent { color: var(--color-danger); }
+.notice { padding: 0.75rem; border-radius: var(--radius); background: var(--color-surface);
+          border-left: 4px solid var(--color-gold); }
 
 /* Popups are bottom sheets: the keyboard and the thumb both reach them easily. */
-.overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: flex;
+.overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); display: flex;
            align-items: flex-end; justify-content: center; z-index: 10; }
 .popup { box-sizing: border-box; width: 100%; max-width: 40rem; max-height: 90vh; overflow-y: auto;
-         background: #fff; padding: 1rem 1rem 1.5rem; border-radius: 1rem 1rem 0 0; }
+         background: var(--color-surface); color: var(--color-text); padding: 1rem 1rem 1.5rem;
+         border: 2px solid var(--color-edge); border-bottom: 0; border-radius: 0 var(--corner) 0 var(--corner); }
 .popup h2 { margin-top: 0; font-size: 1.25rem; }

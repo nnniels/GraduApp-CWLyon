@@ -287,7 +287,7 @@ def test_full_game_to_the_end_screen(me, db):
     me.riddle("a map")
     me.arrive("0420")
     html = me.riddle("Bartholdi")
-    assert "You reached the end!" in html and "finish.svg" in html
+    assert "You reached the end!" in html and "/brand/flag" in html
     assert me.state.phase.value == "ENDED"
     assert repo.get_score(db, "team-1").steps_succeeded == 3
     assert types(me.db)[-1] == "GAME_ENDED"

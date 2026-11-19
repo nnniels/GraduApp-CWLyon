@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Choose your team{% endblock %}
 {% block content %}
+<img class="brand-title" src="{{ url_for('player.brand', name='title') }}" alt="GraduApp">
+<img class="skyline" src="{{ url_for('player.brand', name='skyline') }}" alt="">
+<hr class="separator">
 <h1>Choose your team</h1>
 {% if error and not error_team %}<p class="error" role="alert">{{ error }}</p>{% endif %}
-{% for team in teams %}
-<form class="card" method="post" action="{{ url_for('player.join') }}">
+{% for team, slot in teams %}
+<form class="card team-box slot-{{ slot }}" method="post" action="{{ url_for('player.join') }}">
   <input type="hidden" name="team_id" value="{{ team.id }}">
   <label>Team name
     <input name="name" value="{{ team.name }}" maxlength="40" autocomplete="off" required>
@@ -13,7 +16,7 @@
     <input name="code" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" required>
   </label>
   {% if error and error_team == team.id %}<p class="error" role="alert">{{ error }}</p>{% endif %}
-  <button type="submit">Confirm</button>
+  <button type="submit" class="btn-accent">Confirm</button>
 </form>
 {% else %}
 <p>No team yet. Run <code>flask seed</code> first.</p>

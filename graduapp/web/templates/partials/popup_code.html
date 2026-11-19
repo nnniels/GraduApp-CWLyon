@@ -1,6 +1,5 @@
-<div class="overlay">
-  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
-    <h2 id="popup-title">Validate the location</h2>
+{% import "partials/ui.html" as ui %}
+{% call ui.popup('Validate the location') %}
     <p>Ask your supervisor for the code.</p>
     <form hx-post="{{ url_for('game.arrive') }}" hx-disabled-elt="find button">
       <input type="hidden" name="step_index" value="{{ step_index }}">
@@ -9,8 +8,7 @@
                spellcheck="false" required autofocus>
       </label>
       {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
-      <button type="submit">Validate</button>
+      <button type="submit" class="btn-accent">Validate</button>
     </form>
-    <button type="button" class="secondary" onclick="document.getElementById('modal').innerHTML=''">Cancel</button>
-  </div>
-</div>
+    <button type="button" class="btn" onclick="document.getElementById('modal').innerHTML=''">Cancel</button>
+{% endcall %}

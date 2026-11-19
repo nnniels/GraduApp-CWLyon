@@ -37,6 +37,7 @@ from ..engine.transitions import (
 )
 from .auth import current_team
 from .db import get_db
+from .theme import team_slot
 
 bp = Blueprint("game", __name__, url_prefix="/game")
 
@@ -55,6 +56,15 @@ def _now() -> datetime:
 def _general_open(conn, now: datetime) -> bool:
     deadline = repo.get_general_deadline(conn)
     return deadline is None or now < deadline
+
+
+def images_folder() -> Path:
+    return Path(current_app.config["CONTENT_DIR"]).resolve() / "images"
+
+
+def _team_slot(conn, team_id: str) -> int:
+    ids = [t.id for t in repo.list_teams(conn)]
+    return team_slot(ids.index(team_id)) if team_id in ids else 1
 
 
 def _int(name: str) -> int:
@@ -124,7 +134,10 @@ def _context(conn, team_id, events=(), popup=None, popup_ctx=None) -> dict:
         "step_index": state.step_index,
         "step_number": min(state.step_index + 1, len(course.steps)),
         "total_steps": len(course.steps),
+        "slot": _team_slot(conn, team_id),
     }
+    # Steps covered so far, for the direction meter. Finishing the game covers them all.
+    ctx["covered"] = ctx["total_steps"] if state.phase is Phase.ENDED else state.step_index
     if state.phase in (Phase.GOING, Phase.RIDDLE, Phase.CHALLENGES):
         step = repo.get_step_content(conn, course.steps[state.step_index].id)
         ctx["step"] = step
@@ -155,7 +168,12 @@ def _context(conn, team_id, events=(), popup=None, popup_ctx=None) -> dict:
         for c in repo.list_general_challenges(conn, unlocked):
             row = {"id": c.id, "text": c.text, "new": c.id in new_ids}
             (done if c.id in state.general_ticked else todo).append(row)
-        ctx.update(todo=todo, done=done, general_open=_general_open(conn, now))
+        ctx.update(
+            todo=todo,
+            done=done,
+            general_open=_general_open(conn, now),
+            general_total=repo.count_general_challenges(conn),
+        )
 
     if any(e.type == E.CODE_REJECTED for e in events):
         popup, popup_ctx = POPUP_CODE, {"error": "Wrong code"}
@@ -315,5 +333,4 @@ def general_untick():
 @team_required
 def media(filename: str):
     """Riddle images, from CONTENT_DIR/images. Only for logged-in phones."""
-    folder = Path(current_app.config["CONTENT_DIR"]).resolve() / "images"
-    return send_from_directory(folder, filename)
+    return send_from_directory(images_folder(), filename)

@@ -1,13 +1,12 @@
 {% set general = scope == 'general' %}
-<div class="overlay">
-  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
-    <h2 id="popup-title">{{ challenge.text }}</h2>
+{% import "partials/ui.html" as ui %}
+{% call ui.popup(challenge.text) %}
     {% if challenge_ticked %}
       {% if proof %}<p class="proof">{{ proof }}</p>{% endif %}
       <form hx-post="{{ url_for('game.general_untick' if general else 'game.untick') }}" hx-disabled-elt="find button">
         {% if not general %}<input type="hidden" name="step_index" value="{{ step_index }}">{% endif %}
         <input type="hidden" name="challenge_id" value="{{ challenge.id }}">
-        <button type="submit" class="danger">Challenge uncompleted</button>
+        <button type="submit" class="btn-danger">Challenge uncompleted</button>
       </form>
     {% else %}
       <form hx-post="{{ url_for('game.general_tick' if general else 'game.tick') }}" hx-disabled-elt="find button">
@@ -16,9 +15,8 @@
         <label>Note (optional)
           <input name="text" maxlength="500" autocomplete="off">
         </label>
-        <button type="submit">Challenge completed</button>
+        <button type="submit" class="btn-accent">Challenge completed</button>
       </form>
     {% endif %}
-    <button type="button" class="secondary" onclick="document.getElementById('modal').innerHTML=''">Close</button>
-  </div>
-</div>
+    <button type="button" class="btn" onclick="document.getElementById('modal').innerHTML=''">Close</button>
+{% endcall %}

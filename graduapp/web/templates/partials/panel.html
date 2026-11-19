@@ -1,19 +1,32 @@
 <section id="panel">
-  <h1>{{ team.name }}</h1>
-  {% if phase != 'NOT_STARTED' %}{% include "partials/toggle.html" %}{% endif %}
-
-  {% if view == 'c' %}
-    {% include "partials/view_challenges.html" %}
+  {% if phase == 'NOT_STARTED' %}
+    <img class="brand-title" src="{{ url_for('player.brand', name='title') }}" alt="GraduApp">
+    <img class="skyline" src="{{ url_for('player.brand', name='skyline') }}" alt="">
+    <div class="team-box slot-{{ slot }}">
+      <h1>{{ team.name }}</h1>
+      {% include "partials/phase_start.html" %}
+    </div>
   {% else %}
-    {% if phase in ('GOING', 'RIDDLE', 'CHALLENGES') %}
-    <p class="progress">Location {{ step_number }} of {{ total_steps }}</p>
-    {% endif %}
+    <header class="game-header">
+      <img class="brand-small" src="{{ url_for('player.brand', name='title') }}" alt="GraduApp">
+      <h1>{{ team.name }}</h1>
+    </header>
+    {% include "partials/toggle.html" %}
 
-    {% if phase == 'NOT_STARTED' %}{% include "partials/phase_start.html" %}
-    {% elif phase == 'GOING' %}{% include "partials/phase_going.html" %}
-    {% elif phase == 'RIDDLE' %}{% include "partials/phase_riddle.html" %}
-    {% elif phase == 'CHALLENGES' %}{% include "partials/phase_challenges.html" %}
-    {% else %}{% include "partials/phase_end.html" %}
+    {% if view == 'c' %}
+      {% include "partials/view_challenges.html" %}
+    {% else %}
+      {% if phase in ('GOING', 'RIDDLE', 'CHALLENGES') %}
+      <p class="progress">Location {{ step_number }} of {{ total_steps }}</p>
+      {% endif %}
+      {% import "partials/ui.html" as ui %}
+      {{ ui.meter(covered, total_steps, 'purple', 'Destinations covered') }}
+
+      {% if phase == 'GOING' %}{% include "partials/phase_going.html" %}
+      {% elif phase == 'RIDDLE' %}{% include "partials/phase_riddle.html" %}
+      {% elif phase == 'CHALLENGES' %}{% include "partials/phase_challenges.html" %}
+      {% else %}{% include "partials/phase_end.html" %}
+      {% endif %}
     {% endif %}
   {% endif %}
 </section>

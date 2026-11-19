@@ -5,7 +5,7 @@
   <a href="{{ url_for('admin.teams') }}"{% if tab == 'teams' %} aria-current="page"{% endif %}>Teams</a>
   <a href="{{ url_for('admin.log_page') }}"{% if tab == 'log' %} aria-current="page"{% endif %}>Log</a>
   <a href="{{ url_for('admin.codes') }}"{% if tab == 'codes' %} aria-current="page"{% endif %}>Codes</a>
-  <form method="post" action="{{ url_for('admin.logout') }}"><button class="secondary" type="submit">Log out</button></form>
+  <form method="post" action="{{ url_for('admin.logout') }}"><button type="submit">Log out</button></form>
 </nav>
 {% block admin %}{% endblock %}
 {% endblock %}

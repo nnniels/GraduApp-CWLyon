@@ -1,12 +1,14 @@
+<div class="instruction">
 <h2>Riddle</h2>
 <p class="riddle">{{ step.riddle_text }}</p>
 {% if step.riddle_image %}
 <img class="riddle-image" src="{{ url_for('game.media', filename=step.riddle_image) }}" alt="">
 {% endif %}
+</div>
 <form hx-post="{{ url_for('game.riddle') }}" hx-disabled-elt="find button">
   <input type="hidden" name="step_index" value="{{ step_index }}">
   <label>Your answer
     <textarea name="text" rows="3" maxlength="1000" required></textarea>
   </label>
-  <button type="submit">Submit answer</button>
+  <button type="submit" class="btn-accent">Submit answer</button>
 </form>

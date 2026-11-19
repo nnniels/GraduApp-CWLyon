@@ -1,6 +1,5 @@
-<div class="overlay">
-  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
-    <h2 id="popup-title">{% if notice.lines and notice.lines[0][0] == 'fail' %}Too late{% else %}Well done{% endif %}</h2>
+{% import "partials/ui.html" as ui %}
+{% call ui.popup('Too late' if notice.lines and notice.lines[0][0] == 'fail' else 'Well done') %}
     {% for kind, line in notice.lines %}
     <p class="{{ kind }}">{{ line }}</p>
     {% endfor %}
@@ -8,6 +7,5 @@
     <p>New challenges unlocked:</p>
     <ul>{% for text in notice.unlocked %}<li>{{ text }}</li>{% endfor %}</ul>
     {% endif %}
-    <button type="button" onclick="document.getElementById('modal').innerHTML=''">Continue</button>
-  </div>
-</div>
+    <button type="button" class="btn-accent" onclick="document.getElementById('modal').innerHTML=''">Continue</button>
+{% endcall %}

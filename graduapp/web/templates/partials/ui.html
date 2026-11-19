@@ -1,0 +1,18 @@
+{# Shared components. The look comes from theme.css and app.css; these only build the markup. #}
+
+{% macro popup(title) -%}
+<div class="overlay">
+  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+    <h2 id="popup-title">{{ title }}</h2>
+    {{ caller() }}
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro meter(value, total, color, label) -%}
+{% set pct = (value * 100 / total) | round | int if total else 0 %}
+<div class="meter meter-{{ color }}" role="progressbar" aria-label="{{ label }}"
+     aria-valuemin="0" aria-valuemax="{{ total }}" aria-valuenow="{{ value }}">
+  <span style="width: {{ pct }}%"></span>
+</div>
+{%- endmacro %}

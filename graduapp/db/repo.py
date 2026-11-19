@@ -283,6 +283,10 @@ def list_general_challenges(
     return [ChallengeInfo(r["id"], r["text"]) for r in rows]
 
 
+def count_general_challenges(conn: sqlite3.Connection) -> int:
+    return conn.execute("SELECT COUNT(*) FROM challenge WHERE scope = 'general'").fetchone()[0]
+
+
 def get_seen_general(conn: sqlite3.Connection, team_id: str) -> frozenset[str]:
     rows = conn.execute("SELECT challenge_id FROM challenge_seen WHERE team_id = ?", (team_id,))
     return frozenset(r["challenge_id"] for r in rows)
