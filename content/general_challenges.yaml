@@ -36,7 +36,7 @@ challenges:
   - {id: velov-ride, text: "Get on a Velo’v. +1 point for each person on the Velo’v", points: 0, unlocked_at_start: true}
   - {id: swing, text: "Go on a swing", points: 3, unlocked_at_start: true}
   - {id: pmu-drink, text: "Go to a PMU and order any drink", points: 3, unlocked_at_start: true}
-  - {id: ikea-meatballs, text: "Go to IKEA and order meatballs", points: 10, unlocked_at_start: true}
+  - {id: ikea-meatballs, text: "Go to IKEA and order meatballs", points: 10, unlocked_at_start: false}
   - {id: guignol-clock-chime, text: "Guignol Clock see it chime", points: 4, unlocked_at_start: true}
   - {id: english-cashier-conversation, text: "Have a conversation in English of more than 4 sentences with a cashier", points: 2, unlocked_at_start: true}
   - {id: protest-tourist-office, text: "Hold a protest in front of the burned-down tourist office", points: 2, unlocked_at_start: true}

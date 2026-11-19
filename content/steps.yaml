@@ -24,7 +24,7 @@ steps:
   - id: place-terreaux
     location: {kind: minimap, lat: 45.7676, lon: 4.8338, label: "Place des Terreaux"}
     code: "1337"
-    unlocks: [fountain-pose]
+    unlocks: [ikea-meatballs]
     riddle:
       text: "What is the name of the sculptor of the fountain?"
 
