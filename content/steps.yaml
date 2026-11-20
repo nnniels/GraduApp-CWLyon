@@ -17,81 +17,96 @@ steps:
         - {id: bellecour-sing, text: "Sing the national anthem together"}
         - {id: bellecour-count-lamps, text: "Count the lamp posts around the statue"}
 
-  - id: tour-metallique
+  - id: fourviere
     location: {kind: maps_link, url: "https://maps.google.com/?q=45.7624,4.8222", label: "Fourviere"}
     code: "1337"
+    fun_fact: "I was built in the 19th century with white stone, gold, and mosaic, financed entirely by the locals to thank the Virgin Mary for saving the city from a terrible plague. Right next to me stands a metallic tower, built by a local engineer to look exactly like the top floor of the Eiffel Tower in Paris. "
     riddle:
       text: "I have cities but no houses, mountains but no trees, water but no fish. What am I?"
 
   - id: place-terreaux
     location: {kind: minimap, lat: 45.7676, lon: 4.8338, label: "Place des Terreaux"}
     code: "1337"
+    fun_fact: "My floor features 69 fountains that spit water from the ground. On one side, I hold a majestic 17th-century fountain made of 21 tons of lead, showing four wild water horses representing France's rivers. Just behind the city hall, my neighbor is a neoclassical temple coiffed with a modern, glowing glass dome."
     unlocks: [ikea-meatballs]
     riddle:
       text: "What is the name of the sculptor of the fountain?"
 
   - id: theatre-gallo-romain
     location: {kind: text, text: "Théâtre Gallo-romain, Fourvière"}
-    code: "2101"
+    code: "1337"
+    fun_fact: "I am the oldest landmark in the city, ordered by Emperor Augustus in 15 BC. For centuries, 10,000 Roman citizens would sit on my giant stone semi-circle steps to watch comedies and tragedies. Today, I am still alive and hosting music festivals every summer under the stars."
     riddle:
       text: "I was built for voices two thousand years ago and still hold the echo of applause. What am I?"
 
   - id: jardin-des-curiosites
     location: {kind: text, text: "Jardin des Curiosités, Lyon"}
-    code: "2202"
+    code: "1337"
+    fun_fact: "I am a secret panoramic terrace. To celebrate the 20th anniversary of our friendship, the city of Montreal in Canada gave me as a gift to the people of Lyon. My grass hides six heavy metal chairs bolted into the ground, each engraved with a poetic thought to guide your eyes over the city skyline."
     riddle:
       text: "I hide wonders behind a gate, yet I am open to the curious. What am I?"
 
   - id: traboules
-    location: {kind: text, text: "Traboules du Vieux Lyon"}
-    code: "2303"
+    location: {kind: text, text: "Traboule du 54 rue Saint-Jean (Vieux Lyon)"}
+    code: "1337"
+    fun_fact: "My name comes from the Latin 'trans-ambulare', which means 'to walk through'. I am a secret Renaissance corridor built in the 15th century. I allowed silk merchants and residents to cross from one street to another through buildings and hidden courtyards without getting wet when it rained, and later helped the French Resistance hide from the Nazis."
     riddle:
       text: "I am a passage that cuts through buildings, shortcut for silk weavers. What am I?"
 
+  - id: passage-mermet
+    location: {kind: text, text: "Passage Mermet & Escalier"}
+    code: "1337"
+    riddle:
+      text: "I connect two banks without ever touching the water. What am I?"
+
   - id: guignol
     location: {kind: text, text: "Guignol, Vieux Lyon"}
-    code: "2404"
+    code: "1337"
+    fun_fact: "I sit on the facade of the House of the Sun. Since 1867, I have been hosting the characters of Lyon’s traditional puppet show. Every hour, Guignol and his friend Gnafron move automatically to strike the bells with their wooden sticks to tell the neighborhood the time."
     riddle:
       text: "I wear a red cap, I speak in a loud voice, and I always win in the end. Who am I?"
 
   - id: passerelle
-    location: {kind: text, text: "Passerelle, Lyon"}
-    code: "2505"
+    location: {kind: text, text: "Passerelle Rouge, Lyon"}
+    code: "1337"
+    fun_fact: " If you stand in my center, you get a perfect postcard view: behind you is the old St. Georges church, and right in front of you are the massive, intimidating Greek columns of the 19th-century Law Courts."
     riddle:
       text: "I connect two banks without ever touching the water. What am I?"
 
   - id: fresque
     location: {kind: text, text: "Fresque des Lyonnais, Croix-Rousse"}
-    code: "2606"
+    code: "1337"
     riddle:
       text: "I tell the story of a city in colours on a wall, and no one can walk inside me. What am I?"
 
   - id: amphitheatre-3-gaules
     location: {kind: text, text: "Amphithéâtre des Trois Gaules, Croix-Rousse"}
-    code: "2707"
+    code: "1337"
+    fun_fact: "Built in 19 AD, I am the exact place where the leaders of the 60 Celtic tribes of Gaule gathered every year to pledge their allegiance to Rome and Emperor Augustus. I am also the tragic sanctuary where the very first Christian martyrs of France were executed in the arena."
     riddle:
       text: "Three provinces once met in my arena to honour an emperor. What is my name?"
 
   - id: gros-caillou
     location: {kind: text, text: "Gros Caillou, Lyon"}
-    code: "2808"
+    code: "1337"
+    fun_fact: "Geologists discovered that I don't belong here: I was dragged all the way from the French Alps to this hilltop 140,000 years ago by a giant melting glacier during the Ice Age. I became the ultimate symbol of the proud silk-weavers who lived on this hill. "
     riddle:
       text: "I am a big stone that never moves, yet I am the name of a spot in the city. What am I?"
 
   - id: berges-du-rhone
     location: {kind: text, text: "Berges du Rhône, Lyon"}
-    code: "2909"
+    code: "1337"
     riddle:
       text: "I flow quietly along the city's edge, never stopping and never returning. What am I?"
 
   - id: guillotiere
     location: {kind: text, text: "Quartier de la Guillotière, Lyon"}
-    code: "3011"
+    code: "1337"
     riddle:
-      text: "I am a neighbourhood named after a blade, yet I am full of markets and life. What am I?"
+      text: "I am a neighbourhood named after a killing machine, yet I am full of markets, Malboro and life. What am I?"
 
   - id: parc-tete-d-or
     location: {kind: text, text: "Parc de la Tête d'Or, Lyon"}
-    code: "3112"
+    code: "1337"
     riddle:
       text: "I am a park with a lake, a rose garden and a zoo, and I was named after a golden head. What am I?"

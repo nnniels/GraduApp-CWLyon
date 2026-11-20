@@ -1,3 +1,6 @@
 id: itinerary-a
 title: Itinerary A
-steps: [place-bellecour, tour-metallique, place-terreaux]
+steps: [fourviere, theatre-gallo-romain, jardin-des-curiosites, traboules, guignol, passerelle, place-bellecour, fresque, place-terreaux, passage-mermet, amphitheatre-3-gaules, gros-caillou]
+#  z1 : [fourviere, theatre-gallo-romain, jardin-des-curiosites]
+#  z2 : [traboules, guignol, passerelle]
+#  z3 : [fresque, place-terreaux, passage-mermet, amphitheatre-3-gaules, gros-caillou]

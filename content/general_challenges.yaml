@@ -26,9 +26,9 @@ challenges:
   - {id: find-tear-gas-canister, text: "Find a tear gas canister", points: 9, unlocked_at_start: true}
   - {id: find-antifascist-tag, text: "Find an anti-fascist sticker/tag pasted over a far-right sticker/tag", points: 2, unlocked_at_start: true}
   - {id: find-school-clothing, text: "Find someone wearing an INSA Lyon / ECAM / Centrale Lyon / EM Lyon item of clothing", points: 3, unlocked_at_start: true}
-  - {id: find-mosaic-tiles, text: "Find the little tile mosaics", points: 1, unlocked_at_start: true}
+  - {id: find-mosaic-tiles, text: "Find little tiles mosaics on the ground", points: 1, unlocked_at_start: true}
   - {id: find-lyon-metro-map, text: "Find the map of Lyon at Vieux Lyon metro station. Have one foot on Bellecour, one on Fourvière, and one hand on Part-Dieu", points: 3, unlocked_at_start: true}
-  - {id: find-pixel-art, text: "Find the pixel art on the walls", points: 1, unlocked_at_start: true}
+  - {id: find-pixel-art, text: "Find some pixel art on the walls", points: 1, unlocked_at_start: true}
   - {id: find-steampunk-cyclist, text: "Find the steampunk cyclist", points: 10, unlocked_at_start: true}
   - {id: find-weird-cheese, text: "Find the weirdest cheese in a shop and take a photo with it", points: 3, unlocked_at_start: true}
   - {id: find-burned-bins, text: "Find traces of burned bins from strikes", points: 2, unlocked_at_start: true}
@@ -62,7 +62,7 @@ challenges:
   - {id: graffiti-swedish, text: "Take a photo of a graffiti in Swedish", points: 9, unlocked_at_start: true}
   - {id: renault-trucks-photo, text: "Take a photo of a Renault Trucks vehicle", points: 1, unlocked_at_start: true}
   - {id: stripped-bike, text: "Take a photo of a stripped bike (everything stolen except the frame) that’s still locked up", points: 3, unlocked_at_start: true}
-  - {id: renault-trucks-kleuster, text: "Take a photo of the Renault Trucks Kleuster", points: 10, unlocked_at_start: true}
+  - {id: renault-trucks-kleuster, text: "Take a photo of a Renault Trucks Kleuster", points: 10, unlocked_at_start: true}
   - {id: tcl-bus-tram-velov, text: "Take a photo showing a TCL bus, a tram, and a Velo’v at the same time", points: 7, unlocked_at_start: true}
   - {id: bald-person-photo, text: "Take a photo with a bald person", points: 2, unlocked_at_start: true}
   - {id: beret-photo, text: "Take a photo with a guy wearing a beret", points: 2, unlocked_at_start: true}
