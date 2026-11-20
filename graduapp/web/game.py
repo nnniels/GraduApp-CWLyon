@@ -35,7 +35,7 @@ from ..engine.transitions import (
     UntickGeneral,
     UntickStep,
 )
-from .auth import current_team
+from .auth import admin_enabled, current_team
 from .db import get_db
 from .theme import team_slot
 
@@ -135,6 +135,7 @@ def _context(conn, team_id, events=(), popup=None, popup_ctx=None) -> dict:
         "step_number": min(state.step_index + 1, len(course.steps)),
         "total_steps": len(course.steps),
         "slot": _team_slot(conn, team_id),
+        "admin_enabled": admin_enabled(),
     }
     # Steps covered so far, for the direction meter. Finishing the game covers them all.
     ctx["covered"] = ctx["total_steps"] if state.phase is Phase.ENDED else state.step_index
