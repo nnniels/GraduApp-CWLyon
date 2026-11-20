@@ -11,6 +11,7 @@
 <body>
   <main{% block main_attrs %}{% endblock %}>{% block content %}{% endblock %}</main>
   <script src="{{ url_for('static', filename='js/htmx.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/tab_swipe.js') }}"></script>
   <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
 </body>
 </html>
