@@ -38,6 +38,8 @@ button:disabled, .btn:disabled { opacity: 0.6; }
 .fun-fact { font-size: 1rem; font-style: italic; margin-top: 1rem; }
 /* The instruction the player must follow: white text with a dark red glow. */
 .instruction { text-shadow: 0 0 0.5rem var(--color-red), 0 0 0.15rem var(--color-red); }
+.instruction.going { text-shadow: none; }
+.instruction.going .location { text-shadow: 0 0 0.5rem var(--color-red), 0 0 0.15rem var(--color-red); }
 .meter { height: 0.75rem; margin: 0.5rem 0 1rem; overflow: hidden; background: var(--color-surface-deep);
          border: 1px solid var(--color-muted); border-radius: var(--radius); }
 .meter > span { display: block; height: 100%; background: var(--meter-color); }
