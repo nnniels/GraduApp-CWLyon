@@ -38,8 +38,14 @@ button:disabled, .btn:disabled { opacity: 0.6; }
 .fun-fact { font-size: 1rem; font-style: italic; margin-top: 1rem; }
 /* The instruction the player must follow: white text with a dark red glow. */
 .instruction { text-shadow: 0 0 0.5rem var(--color-red), 0 0 0.15rem var(--color-red); }
-.instruction.going { text-shadow: none; }
-.instruction.going .location { text-shadow: 0 0 0.5rem var(--color-red), 0 0 0.15rem var(--color-red); }
+/* "Go to" screen: small label, big glowing place name, then calm italic notes. */
+.going-title { margin: 0 0 0.25rem; font-size: 1rem; letter-spacing: 0.12em; color: var(--color-light-grey); }
+.going .location { margin: 0 0 1rem; font-family: var(--font-display); font-size: 2rem; font-weight: var(--font-weight-bold);
+                   line-height: 1.15; text-transform: uppercase; letter-spacing: 0.03em;
+                   text-shadow: 0 0 0.6rem var(--color-red), 0 0 0.2rem var(--color-red); }
+.going .get-there, .going .fun-fact { font-size: 1.05rem; font-style: italic; margin: 0 0 1rem; color: var(--color-text); }
+.going .fun-fact { padding-top: 1rem; border-top: 1px solid var(--color-muted); }
+.going .fun-fact strong { font-style: normal; }
 .meter { height: 0.75rem; margin: 0.5rem 0 1rem; overflow: hidden; background: var(--color-surface-deep);
          border: 1px solid var(--color-muted); border-radius: var(--radius); }
 .meter > span { display: block; height: 100%; background: var(--meter-color); }
