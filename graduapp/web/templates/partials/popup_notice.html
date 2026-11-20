@@ -7,5 +7,5 @@
     <p>New challenges unlocked:</p>
     <ul>{% for text in notice.unlocked %}<li>{{ text }}</li>{% endfor %}</ul>
     {% endif %}
-    <button type="button" class="btn-accent" onclick="document.getElementById('modal').innerHTML=''">Continue</button>
+    <button type="button" class="btn-accent popup-continue" onclick="document.getElementById('modal').innerHTML=''">Continue</button>
 {% endcall %}

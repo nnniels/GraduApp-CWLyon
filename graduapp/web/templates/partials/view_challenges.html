@@ -3,12 +3,14 @@
 <li>
   {% if open %}
   <button type="button" class="challenge{% if done %} ticked{% endif %}" hx-get="{{ url_for('game.general_popup', challenge_id=c.id) }}">
-    {% if done %}<span class="tick" aria-label="done">&#10003;</span> {% endif %}{{ c.text }}{% if c.new %} <span class="new">NEW</span>{% endif %}
+    {% if done %}<span class="tick" aria-label="done">&#10003;</span>{% endif %}
+    <span class="challenge-text">{{ c.text }}</span>
+    {% if c.new %}<span class="new">NEW</span>{% endif %}
   </button>
   {% elif done %}
-  <div class="challenge ticked readonly"><span class="tick" aria-label="done">&#10003;</span> {{ c.text }}</div>
+  <div class="challenge ticked readonly"><span class="tick" aria-label="done">&#10003;</span><span class="challenge-text">{{ c.text }}</span></div>
   {% else %}
-  <div class="challenge readonly">{{ c.text }}</div>
+  <div class="challenge readonly"><span class="challenge-text">{{ c.text }}</span></div>
   {% endif %}
 </li>
 {% endmacro %}

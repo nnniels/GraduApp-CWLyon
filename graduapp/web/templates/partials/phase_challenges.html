@@ -6,7 +6,8 @@
   <li>
     <button type="button" class="challenge{% if c.ticked %} ticked{% endif %}"
             hx-get="{{ url_for('game.challenge_popup', challenge_id=c.id) }}">
-  <span aria-hidden="true" class="tick">{{ '✓' if c.ticked else '' }}</span> {{ c.text }}
+      {% if c.ticked %}<span aria-hidden="true" class="tick">✓</span>{% endif %}
+      <span class="challenge-text">{{ c.text }}</span>
     </button>
   </li>
   {% endfor %}
