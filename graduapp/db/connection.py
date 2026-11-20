@@ -20,3 +20,5 @@ def init_db(conn: sqlite3.Connection) -> None:
     # Databases created before `fun_fact` existed.
     if "fun_fact" not in {r["name"] for r in conn.execute("PRAGMA table_info(step)")}:
         conn.execute("ALTER TABLE step ADD COLUMN fun_fact TEXT")
+    if "get_there" not in {r["name"] for r in conn.execute("PRAGMA table_info(step)")}:
+        conn.execute("ALTER TABLE step ADD COLUMN get_there TEXT")

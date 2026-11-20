@@ -1,5 +1,5 @@
 <div class="instruction going">
-<h2>Go to this location</h2>
+{% if step.get_there %}<h2>{{ step.get_there }}</h2>{% else %}<h2>Go to this location</h2>{% endif %}
 {% if location.kind == 'text' %}
   <p class="location">{{ location.text }}</p>
 {% elif location.kind == 'maps_link' %}

@@ -1,6 +1,7 @@
 # Library of steps. An itinerary only lists step ids, so a step can be shared between itineraries.
 # Exactly one of `riddle` or `challenges` per step. Codes are validated by the supervisor: keep them quoted.
 # location.kind: text (text) | maps_link (url) | minimap (lat, lon). `label` is optional.
+# Optional `get_there: "..."` replaces the default "Go to this location" heading on the "Go to" screen.
 # Optional `fun_fact: "..."` (quoted string) is shown under the directions on the "Go to" screen.
 steps:
   - id: place-bellecour
@@ -18,8 +19,9 @@ steps:
         - {id: bellecour-count-lamps, text: "Count the lamp posts around the statue"}
 
   - id: fourviere
-    location: {kind: maps_link, url: "https://maps.google.com/?q=45.7624,4.8222", label: "Fourviere"}
+    location: {kind: maps_link, url: "https://maps.google.com/?q=45.7624,4.8222", label: "Fourvière"}
     code: "1337"
+    get_there: "Walk up the steep, scenic stairs of Montée des Chazes to the very top of the hill, or take the Ficelle."
     fun_fact: "I was built in the 19th century with white stone, gold, and mosaic, financed entirely by the locals to thank the Virgin Mary for saving the city from a terrible plague. Right next to me stands a metallic tower, built by a local engineer to look exactly like the top floor of the Eiffel Tower in Paris. "
     riddle:
       text: "I have cities but no houses, mountains but no trees, water but no fish. What am I?"
