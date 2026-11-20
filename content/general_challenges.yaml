@@ -2,14 +2,12 @@
 # unlocked_at_start: true  -> visible from the beginning
 # otherwise unlocked by a step through its `unlocks` list.
 challenges:
-  - {id: jump-footbridge, text: "All team members jump together on the Saint-Georges footbridge", points: 4, unlocked_at_start: true}
   - {id: ask-fourviere-direction, text: "Ask a passerby where Fourvière is while standing in front of Fourvière", points: 1, unlocked_at_start: true}
   - {id: ask-macron-resign, text: "Ask a passerby whether they think Macron should resign, and why", points: 1, unlocked_at_start: true}
   - {id: baguette-end-piece, text: "Buy a baguette at a bakery and eat the end piece", points: 1, unlocked_at_start: true}
   - {id: buy-marlboro-guillotiere, text: "Buy a pack of Marlboros in Guillotière", points: 1, unlocked_at_start: true}
   - {id: catch-pigeon, text: "Catch a pigeon", points: 10, unlocked_at_start: true}
   - {id: compliment-passersby, text: "Compliment passersby (at least 3 people)", points: 1, unlocked_at_start: false}
-  - {id: count-stairs-vieux-lyon, text: "Count the number of steps on a staircase in Vieux Lyon", points: 1, unlocked_at_start: true}
   - {id: evade-metro-fare, text: "Evade the metro fare", points: 4, unlocked_at_start: true}
   - {id: baguette-jedi-fight, text: "Fight with baguettes like Jedis", points: 2, unlocked_at_start: true}
   - {id: find-2cv, text: "Find a 2CV", points: 5, unlocked_at_start: true}
@@ -32,14 +30,14 @@ challenges:
   - {id: find-steampunk-cyclist, text: "Find the steampunk cyclist", points: 10, unlocked_at_start: true}
   - {id: find-weird-cheese, text: "Find the weirdest cheese in a shop and take a photo with it", points: 3, unlocked_at_start: true}
   - {id: find-burned-bins, text: "Find traces of burned bins from strikes", points: 2, unlocked_at_start: true}
-  - {id: bus-honk-wave, text: "Get a bus/tram/metro to honk by waving at the driver", points: 2, unlocked_at_start: true}
+  - {id: bus-honk-wave, text: "Get a bus/tram/metro to honk by waving at the driver", points: 2, unlocked_at_start: false}
   - {id: velov-ride, text: "Get on a Velo’v. +1 point for each person on the Velo’v", points: 0, unlocked_at_start: true}
-  - {id: swing, text: "Go on a swing", points: 3, unlocked_at_start: true}
+  - {id: swing, text: "Go on a swing", points: 3, unlocked_at_start: false}
   - {id: pmu-drink, text: "Go to a PMU and order any drink", points: 3, unlocked_at_start: true}
   - {id: ikea-meatballs, text: "Go to IKEA and order meatballs", points: 10, unlocked_at_start: false}
-  - {id: guignol-clock-chime, text: "Guignol Clock see it chime", points: 4, unlocked_at_start: true}
+  - {id: guignol-clock-chime, text: "Guignol Clock see it chime", points: 4, unlocked_at_start: false}
   - {id: english-cashier-conversation, text: "Have a conversation in English of more than 4 sentences with a cashier", points: 2, unlocked_at_start: true}
-  - {id: protest-tourist-office, text: "Hold a protest in front of the burned-down tourist office", points: 2, unlocked_at_start: true}
+  - {id: protest-tourist-office, text: "Hold a protest in front of the burned-down tourist office", points: 2, unlocked_at_start: false}
   - {id: advertising-pose, text: "Imitate the model pose of an advertising poster", points: 1, unlocked_at_start: true}
   - {id: bakery-brioche-phrase, text: 'In a bakery: "Bonjour, une brioche à la praline s''il vous plaît ! Merci, bonne journée !"', points: 2, unlocked_at_start: true}
   - {id: scooter-structure, text: "Make a contemporary art structure using electric scooters (at least 3)", points: 4, unlocked_at_start: true}
@@ -54,7 +52,7 @@ challenges:
   - {id: race-croix-rousse-stairs, text: "Race up a large staircase leading to Croix-Rousse", points: 2, unlocked_at_start: true}
   - {id: fresque-pose, text: "Recreate the pose of a person on the Fresque des Lyonnais", points: 2, unlocked_at_start: true}
   - {id: ara-regional-logos, text: "Take a photo for every Auvergne-Rhône-Alpes regional logo seen anywhere", points: 0, unlocked_at_start: true}
-  - {id: bouchon-bottle-stopper, text: "Take a photo in front of a bouchon with a bottle stopper in your hand", points: 5, unlocked_at_start: true}
+  - {id: bouchon-bottle-stopper, text: "Take a photo in front of a bouchon with a bottle stopper in your hand", points: 5, unlocked_at_start: false}
   - {id: graffiti-english, text: "Take a photo of a graffiti in English", points: 2, unlocked_at_start: true}
   - {id: graffiti-french, text: "Take a photo of a graffiti in French", points: 1, unlocked_at_start: true}
   - {id: graffiti-hindi, text: "Take a photo of a graffiti in Hindi", points: 9, unlocked_at_start: true}
@@ -66,7 +64,7 @@ challenges:
   - {id: tcl-bus-tram-velov, text: "Take a photo showing a TCL bus, a tram, and a Velo’v at the same time", points: 7, unlocked_at_start: true}
   - {id: bald-person-photo, text: "Take a photo with a bald person", points: 2, unlocked_at_start: true}
   - {id: beret-photo, text: "Take a photo with a guy wearing a beret", points: 2, unlocked_at_start: true}
-  - {id: red-velov-fourviere, text: "Take a photo with a red Velo’v (not green) at the top of Fourvière", points: 5, unlocked_at_start: true}
+  - {id: red-velov-fourviere, text: "Take a photo with a red Velo’v (not green) at the top of Fourvière", points: 5, unlocked_at_start: false}
   - {id: volvo-truck-photo, text: "Take a photo with a Volvo truck", points: 2, unlocked_at_start: true}
   - {id: jean-philippe-photo, text: "Take a photo with someone named Jean-Philippe (proof of the first name required)", points: 2, unlocked_at_start: true}
   - {id: guignol-selfie, text: "Take a selfie with a depiction of Guignol (poster, puppet)", points: 1, unlocked_at_start: true}
