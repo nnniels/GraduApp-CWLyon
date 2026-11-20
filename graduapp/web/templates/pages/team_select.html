@@ -1,10 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Choose your team{% endblock %}
+{% block head_extra %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,800;1,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+{% endblock %}
+{% block main_attrs %} class="team-select"{% endblock %}
 {% block content %}
 <img class="brand-title brand-title-left" src="{{ url_for('player.brand', name='title') }}" alt="GraduApp">
 <img class="skyline" src="{{ url_for('player.brand', name='skyline') }}" alt="">
 <hr class="separator">
-<h1>Choose your team</h1>
+<h1 class="team-select-title">Choose your team</h1>
+<p class="team-select-subtitle">Join your crew.</p>
 {% if error and not error_team %}<p class="error" role="alert">{{ error }}</p>{% endif %}
 {% for team, slot in teams %}
 <form class="card team-box slot-{{ slot }}" method="post" action="{{ url_for('player.join') }}">

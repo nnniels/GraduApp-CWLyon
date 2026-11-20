@@ -3,9 +3,21 @@
 body { font-family: var(--font-text); font-size: 1.125rem; margin: 0; line-height: 1.4;
        background: var(--color-bg); color: var(--color-text); }
 main { padding: 1rem; max-width: 40rem; margin: 0 auto; }
+.team-select { max-width: 70rem; padding: 1.5rem 2rem; }
 h1, h2, h3 { font-family: var(--font-display); font-weight: var(--font-weight-bold);
              text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.15; }
 h1 { font-size: 1.75rem; margin: 0.5rem 0 1rem; }
+.team-select-title { margin: 0.75rem 0 0; color: var(--color-text); font-family: "Barlow Condensed", sans-serif;
+                font-size: 5.5rem; font-style: italic; font-weight: 900; letter-spacing: 0; line-height: 0.95;
+                text-shadow: 0.08em 0.08em 0 #ff001b, 0.14em 0.14em 0 #123cff; }
+.team-select-subtitle { margin: 1rem 0 1.5rem; color: var(--color-muted); font-family: "Inter", sans-serif;
+                font-size: 2rem; font-weight: 400; line-height: 1.2; }
+.team-select .team-box { max-width: 40rem; }
+@media (max-width: 40rem) {
+        .team-select { padding: 1rem; }
+        .team-select-title { font-size: 3.25rem; }
+        .team-select-subtitle { font-size: 1.5rem; }
+}
 h2 { font-size: 1.35rem; margin-top: 0; }
 h3 { font-size: 1.15rem; margin: 1.25rem 0 0.5rem; }
 a { color: var(--color-edge); }
