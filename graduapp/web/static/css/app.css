@@ -97,6 +97,10 @@ th, td { text-align: left; vertical-align: top; padding: 0.4rem 0.6rem; border-b
              border: 2px solid var(--color-edge); border-radius: var(--radius); }
 .challenge.ticked { border-color: var(--color-light-green); }
 .challenge.readonly { cursor: default; }
+.points { float: right; margin-left: 0.5rem; padding: 0.05rem 0.45rem; border-radius: var(--radius);
+          font-family: var(--font-display); font-size: 0.8rem; font-weight: var(--font-weight-bold);
+          letter-spacing: 0.04em; white-space: nowrap; color: var(--color-text);
+          background: var(--color-surface-deep); border: 1px solid var(--color-edge); }
 .tick { margin-right: 0.35rem; color: var(--color-light-green); font-weight: 900; }
 /* The team name in a small dark box, with the team colour on its edges. */
 .team-tag { display: inline-block; padding: 0.3rem 0.75rem; font-family: var(--font-display);

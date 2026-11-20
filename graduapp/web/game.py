@@ -167,7 +167,7 @@ def _context(conn, team_id, events=(), popup=None, popup_ctx=None) -> dict:
     if view_name == "c":
         todo, done = [], []
         for c in repo.list_general_challenges(conn, unlocked):
-            row = {"id": c.id, "text": c.text, "new": c.id in new_ids}
+            row = {"id": c.id, "text": c.text, "points": c.points, "new": c.id in new_ids}
             (done if c.id in state.general_ticked else todo).append(row)
         ctx.update(
             todo=todo,
