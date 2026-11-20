@@ -142,7 +142,7 @@ steps:
       text: "I am a park with a lake, a rose garden and a zoo, and I was named after a golden head. What am I?"
 
   - id: cour-vorace
-    location: {kind: maps_link, url: "https://maps.google.com/?q=45.7708,4.8330", label: "Cour des Voraces"}
+    location: {kind: maps_link, url: "https://maps.app.goo.gl/zQFUa6rq4SxvyeP18", label: "Cour des Voraces"}
     code: "1337"
     challenges:
       k: 1
