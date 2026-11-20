@@ -37,7 +37,7 @@ steps:
       text: "What is the name of the sculptor of the fountain?"
 
   - id: theatre-gallo-romain
-    location: {kind: text, text: "Théâtre Gallo-romain, Fourvière"}
+    location: {kind: maps_link, url: "https://maps.app.goo.gl/vjbaeWPFnUXiYbMi7", label: "Théâtre Gallo-romain, Fourvière"}
     code: "1337"
     fun_fact: "I am the oldest landmark in the city, ordered by Emperor Augustus in 15 BC. For centuries, 10,000 Roman citizens would sit on my giant stone semi-circle steps to watch comedies and tragedies. Today, I am still alive and hosting music festivals every summer under the stars."
     challenges:
@@ -51,7 +51,7 @@ steps:
 
 
   - id: jardin-des-curiosites
-    location: {kind: text, text: "Jardin des Curiosités, Lyon"}
+    location: {kind: maps_link, url: "https://maps.app.goo.gl/tXYyFqv39kc6Lcmq8", label: "Jardin des Curiosités, Lyon"}
     code: "1337"
     fun_fact: "I am a secret panoramic terrace. To celebrate the 20th anniversary of our friendship, the city of Montreal in Canada gave me as a gift to the people of Lyon. My grass hides six heavy metal chairs bolted into the ground, each engraved with a poetic thought to guide your eyes over the city skyline."
     riddle:
@@ -67,7 +67,7 @@ steps:
       text: "Who’s most likely to get everyone laughing at exactly the wrong moment?"
 
   - id: passage-mermet
-    location: {kind: text, text: "Passage Mermet & Escalier"}
+    location: {kind: maps_link, url: "https://maps.app.goo.gl/iH2rdbeszUzQ3Ygy9", label: "Passage Mermet & Escalier"}
     code: "1337"
     riddle:
       title: "Question"
@@ -96,7 +96,7 @@ steps:
         - {id: footbridge-selfie, text: "Take a selfie on the bridge and send it to Alex", points: 2}
 
   - id: fresque
-    location: {kind: text, text: "Fresque des Lyonnais, Croix-Rousse"}
+    location: {kind: maps_link, url: "https://maps.app.goo.gl/uP6zsAV2YG1atDcf7", label: "Fresque des Lyonnais, Croix-Rousse"}
     code: "1337"
     unlocks: [ikea-meatballs, bus-honk-wave]
     riddle:
@@ -104,7 +104,7 @@ steps:
       text: "Who’s most likely to start a new hobby with intense enthusiasm and all the equipment, then giving up in 2 weeks?"
 
   - id: amphitheatre-3-gaules
-    location: {kind: text, text: "Amphithéâtre des Trois Gaules, Croix-Rousse"}
+    location: {kind: maps_link, url: "https://maps.app.goo.gl/XygXnDqaK9VYphAY6", label: "Amphithéâtre des Trois Gaules, Croix-Rousse"}
     code: "1337"
     fun_fact: "Built in 19 AD, I am the exact place where the leaders of the 60 Celtic tribes of Gaule gathered every year to pledge their allegiance to Rome and Emperor Augustus. I am also the tragic sanctuary where the very first Christian martyrs of France were executed in the arena."
     riddle:
@@ -112,7 +112,7 @@ steps:
       text: "Who’s most likely to accidentally become the unofficial project manager ?"
     
   - id: gros-caillou
-    location: {kind: text, text: "Gros Caillou, Lyon"}
+    location: {kind: maps_link, url: "https://maps.app.goo.gl/yUuzRrMGzbvT7TfSA", label: "Gros Caillou, Lyon"}
     code: "1337"
     fun_fact: "Geologists discovered that I don't belong here: I was dragged all the way from the French Alps to this hilltop 140,000 years ago by a giant melting glacier during the Ice Age. I became the ultimate symbol of the proud silk-weavers who lived on this hill. "
     riddle:
@@ -127,7 +127,7 @@ steps:
       text: "Who’s most likely to make a colour-coded binder for even a small plan?"
 
   - id: guillotiere
-    location: {kind: text, text: "Quartier de la Guillotière, Lyon"}
+    location: {kind: maps_link, url: "https://maps.app.goo.gl/aJGef5jjidCpnRTy5", label: "Quartier de la Guillotière, Lyon"}
     code: "0000"
     fun_fact: "[IMPORTANT] Ask Marie before going. Code is 0000"
     riddle:
@@ -135,14 +135,14 @@ steps:
       text: "I am a neighbourhood named after a killing machine, yet I am full of markets, Malboro and life. What am I?"
 
   - id: parc-tete-d-or
-    location: {kind: text, text: "Parc de la Tête d'Or, Lyon"}
+    location: {kind: maps_link, url: "https://maps.app.goo.gl/9coyFZpF44HqJVcU9", label: "Parc de la Tête d'Or, Lyon"}
     code: "1337"
     riddle:
       title: "Riddle"
       text: "I am a park with a lake, a rose garden and a zoo, and I was named after a golden head. What am I?"
 
   - id: cour-vorace
-    location: {kind: text, text: "Cour des Voraces"}
+    location: {kind: maps_link, url: "https://maps.google.com/?q=45.7708,4.8330", label: "Cour des Voraces"}
     code: "1337"
     challenges:
       k: 1
