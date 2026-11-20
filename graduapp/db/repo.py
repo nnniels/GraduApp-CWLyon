@@ -79,6 +79,7 @@ class StepContent:
     challenges: tuple[ChallengeInfo, ...]
     fun_fact: str | None = None
     get_there: str | None = None
+    riddle_title: str | None = None
 
 
 # Time
@@ -248,7 +249,7 @@ def load_course(conn: sqlite3.Connection, itinerary_id: str) -> Course:
 def get_step_content(conn: sqlite3.Connection, step_id: str) -> StepContent:
     s = conn.execute(
         "SELECT id, kind, location_json, riddle_text, riddle_image, challenge_k, "
-        "challenge_duration_s, fun_fact, get_there FROM step WHERE id = ?",
+        "challenge_duration_s, fun_fact, get_there, riddle_title FROM step WHERE id = ?",
         (step_id,),
     ).fetchone()
     if s is None:
@@ -262,7 +263,7 @@ def get_step_content(conn: sqlite3.Connection, step_id: str) -> StepContent:
     return StepContent(
         s["id"], s["kind"], json.loads(s["location_json"]), s["riddle_text"], s["riddle_image"],
         s["challenge_k"] or 0, s["challenge_duration_s"] or 0, challenges,
-        s["fun_fact"], s["get_there"],
+        s["fun_fact"],         s["get_there"], s["riddle_title"],
     )
 
 

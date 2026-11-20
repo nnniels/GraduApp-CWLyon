@@ -22,3 +22,5 @@ def init_db(conn: sqlite3.Connection) -> None:
         conn.execute("ALTER TABLE step ADD COLUMN fun_fact TEXT")
     if "get_there" not in {r["name"] for r in conn.execute("PRAGMA table_info(step)")}:
         conn.execute("ALTER TABLE step ADD COLUMN get_there TEXT")
+    if "riddle_title" not in {r["name"] for r in conn.execute("PRAGMA table_info(step)")}:
+        conn.execute("ALTER TABLE step ADD COLUMN riddle_title TEXT")

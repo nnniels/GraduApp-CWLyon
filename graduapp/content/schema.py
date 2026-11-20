@@ -23,6 +23,7 @@ class Challenge:
 class Riddle:
     text: str
     image: str | None = None
+    title: str = "Riddle"
 
 
 @dataclass(frozen=True)
@@ -195,11 +196,13 @@ def build_content(steps_raw, general_raw, itineraries_raw, teams_raw) -> Content
         elif has_riddle:
             r = raw["riddle"]
             if isinstance(r, dict):
-                check_keys(r, {"text", "image"}, f"{where}.riddle")
+                check_keys(r,                 {"title", "text", "image"}, f"{where}.riddle")
             if not isinstance(r, dict) or not _is_str(r.get("text")):
                 errors.append(f"{where}.riddle: 'text' must be a non-empty string")
+            elif r.get("title") is not None and not _is_str(r["title"]):
+                errors.append(f"{where}.riddle: 'title' must be a non-empty string when present")
             else:
-                riddle = Riddle(r["text"], r.get("image"))
+                riddle = Riddle(r["text"], r.get("image"), r.get("title") or "Riddle")
         else:
             c = raw["challenges"]
             if not isinstance(c, dict):

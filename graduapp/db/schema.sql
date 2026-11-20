@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS step (
     points               INTEGER NOT NULL DEFAULT 0 CHECK (points >= 0),
     fun_fact             TEXT,
     get_there            TEXT,
+    riddle_title         TEXT,
     CHECK (
         (kind = 'riddle' AND riddle_text IS NOT NULL
             AND challenge_k IS NULL AND challenge_duration_s IS NULL)

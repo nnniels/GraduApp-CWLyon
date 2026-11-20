@@ -1,5 +1,5 @@
 <div class="instruction">
-<h2>Riddle</h2>
+<h2>{{ step.riddle_title or 'Riddle' }}</h2>
 <p class="riddle">{{ step.riddle_text }}</p>
 {% if step.riddle_image %}
 <img class="riddle-image" src="{{ url_for('game.media', filename=step.riddle_image) }}" alt="">
