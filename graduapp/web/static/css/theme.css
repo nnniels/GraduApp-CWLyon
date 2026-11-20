@@ -2,6 +2,10 @@
    Team slots 1-4 match TEAM_SLOTS in graduapp/web/theme.py. */
 :root {
   --color-bg: #1e2024;
+  --color-header-bg: #111d3a;
+  --color-confirm-edge: #a7b6ff;
+  --color-confirm-shadow: #090e26;
+  --color-confirm-glow: rgba(65, 87, 255, 0.28);
   --color-surface: #2a2d33;
   --color-surface-deep: #14161a;
   --color-blue: #0d3b8f;
@@ -24,6 +28,7 @@
   --team-4: #cfd5de;
 
   --gradient-accent: linear-gradient(100deg, var(--color-blue), var(--color-red));
+  --gradient-confirm: linear-gradient(105deg, #2449ec 0%, #6035df 54%, #c41d51 100%);
 
   --font-display: Bahnschrift, "Arial Narrow", "Roboto Condensed", "Arial Black", Impact, sans-serif;
   --font-text: "Segoe UI", Roboto, Arial, sans-serif;

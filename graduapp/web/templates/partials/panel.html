@@ -1,13 +1,13 @@
 <section id="panel">
   {% if phase == 'NOT_STARTED' %}
-    <img class="brand-title" src="{{ url_for('player.brand', name='title') }}" alt="GraduApp">
+    <header class="team-select-header">
+      <img class="brand-title brand-title-left" src="{{ url_for('player.brand', name='title') }}" alt="GraduApp">
     <img class="skyline" src="{{ url_for('player.brand', name='skyline') }}" alt="">
-    <div class="team-box slot-{{ slot }}">
-      <p><span class="team-tag slot-{{ slot }}">{{ team.name }}</span></p>
-      {% include "partials/phase_start.html" %}
-    </div>
+      <hr class="separator">
+    </header>
+    {% include "partials/phase_start.html" %}
   {% else %}
-  <header class="game-header">
+  <header class="game-header{% if phase == 'GOING' %} game-header-going{% endif %}">
       <img class="brand-small" src="{{ url_for('player.brand', name='title') }}" alt="GraduApp">
       <span class="team-tag slot-{{ slot }}">{{ team.name }}</span>
     </header>

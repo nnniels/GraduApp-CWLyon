@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block title %}{{ team.name }}{% endblock %}
+{% block head_extra %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,800;1,900&family=Inter:wght@400;500;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
 {% block content %}
 <div id="app" hx-target="#panel" hx-swap="outerHTML">
   {% include "partials/panel.html" %}

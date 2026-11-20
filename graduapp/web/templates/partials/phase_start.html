@@ -1,2 +1,7 @@
-<p>Your team is registered. Start when you are all ready: your first location appears right away.</p>
-<button class="btn-accent" hx-post="{{ url_for('game.start') }}" hx-disabled-elt="this">Start the game</button>
+<section class="registration-frame team-box slot-{{ slot }}">
+	<p class="registration-kicker">Registration complete</p>
+	<h1 class="registration-team-name">{{ team.name }}</h1>
+	<hr class="separator">
+	<p class="registration-copy">Your team is registered. You guys are the best. Or not? We'll see today.</p>
+</section>
+<button class="btn-accent registration-start" hx-post="{{ url_for('game.start') }}" hx-disabled-elt="this">Start the game</button>

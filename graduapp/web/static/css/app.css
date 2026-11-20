@@ -3,19 +3,25 @@
 body { font-family: var(--font-text); font-size: 1.125rem; margin: 0; line-height: 1.4;
        background: var(--color-bg); color: var(--color-text); }
 main { padding: 1rem; max-width: 40rem; margin: 0 auto; }
-.team-select { max-width: 70rem; padding: 1.5rem 2rem; }
+.team-select { max-width: 40rem; padding: 1.5rem 2rem; }
+.team-select-header { margin: -1.5rem -2rem 1.5rem; padding: 1.5rem 2rem 0;
+                      background: var(--color-header-bg); }
+.team-select-header .separator { margin-bottom: 0; }
+#panel > .team-select-header { margin: -1rem -1rem 1.5rem; padding: 1.5rem 2rem 0; }
 h1, h2, h3 { font-family: var(--font-display); font-weight: var(--font-weight-bold);
              text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.15; }
 h1 { font-size: 1.75rem; margin: 0.5rem 0 1rem; }
 .team-select-title { margin: 0.75rem 0 0; color: var(--color-text); font-family: "Barlow Condensed", sans-serif;
-                font-size: 5.5rem; font-style: italic; font-weight: 900; letter-spacing: 0; line-height: 0.95;
+                font-size: 4.5rem; font-style: italic; font-weight: 900; letter-spacing: 0; line-height: 0.95;
                 text-shadow: 0.08em 0.08em 0 #ff001b, 0.14em 0.14em 0 #123cff; }
 .team-select-subtitle { margin: 1rem 0 1.5rem; color: var(--color-muted); font-family: "Inter", sans-serif;
                 font-size: 2rem; font-weight: 400; line-height: 1.2; }
 .team-select .team-box { max-width: 40rem; }
 @media (max-width: 40rem) {
         .team-select { padding: 1rem; }
-        .team-select-title { font-size: 3.25rem; }
+        .team-select-header { margin: -1rem -1rem 1.5rem; padding: 1rem 1rem 0; }
+        #panel > .team-select-header { padding: 1rem 1rem 0; }
+        .team-select-title { font-size: 2.5rem; }
         .team-select-subtitle { font-size: 1.5rem; }
 }
 h2 { font-size: 1.35rem; margin-top: 0; }
@@ -25,10 +31,12 @@ a { color: var(--color-edge); }
 .card { background: var(--color-surface); border: var(--edge-width) solid var(--color-edge);
         border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; }
 label { display: block; font-weight: 700; margin-bottom: 0.75rem; }
+.team-select .team-box label { font-family: "Rajdhani", sans-serif; font-size: 1.6rem; }
 input, textarea { display: block; box-sizing: border-box; width: 100%; margin-top: 0.25rem;
-        padding: 0.75rem; font: inherit; font-size: 1.125rem; color: var(--color-text);
+        padding: 0.75rem; font: inherit; font-size: 1.3rem; color: var(--color-text);
         background: var(--color-surface-deep); border: var(--edge-width) solid var(--color-muted);
         border-radius: var(--radius); }
+.team-select .team-box input { font-family: var(--font-text); }
 input:focus, textarea:focus { outline: 2px solid var(--color-edge); outline-offset: 1px; }
 .error, .fail { color: var(--color-danger); font-weight: 700; }
 .ok { color: var(--color-success); font-weight: 700; }
@@ -42,6 +50,12 @@ button, .btn { display: block; box-sizing: border-box; width: 100%; min-height: 
         background: var(--color-surface-deep); border: var(--edge-width) solid var(--color-edge);
         border-radius: var(--radius); }
 .btn-accent { background: var(--gradient-accent); }
+.team-select .btn-accent, .registration-start { min-height: 4rem; padding: 1rem; font-family: "Barlow Condensed", sans-serif;
+                                                font-size: 2.5rem; font-style: italic; font-weight: 900;
+                                                letter-spacing: 0; line-height: 1; background: var(--gradient-confirm);
+                                                border: 2px solid var(--color-confirm-edge); border-radius: var(--radius-soft);
+                                                box-shadow: 0 0.5rem 0 var(--color-confirm-shadow),
+                                                            0 0 1rem var(--color-confirm-glow); }
 .btn-danger { background: var(--color-red); }
 button:disabled, .btn:disabled { opacity: 0.6; }
 
@@ -68,7 +82,25 @@ button:disabled, .btn:disabled { opacity: 0.6; }
 .slot-2 { --team: var(--team-2); }
 .slot-3 { --team: var(--team-3); }
 .slot-4 { --team: var(--team-4); }
-.team-box { border: 2px solid var(--team); border-radius: 0 var(--corner) 0 var(--corner); }
+.team-box { border: 2px solid var(--team); border-radius: 0 var(--corner) 0 var(--corner);
+            box-shadow: 0.4rem 0.4rem 0 color-mix(in srgb, var(--team) 65%, var(--color-header-bg)); }
+.team-select .team-box { margin-bottom: 2rem; }
+.registration-frame { margin: 0 0 1.75rem; padding: 1.5rem 1.75rem; background: var(--color-header-bg); }
+.registration-kicker { margin: 0 0 2.5rem; color: #ff5b83; font-family: "Rajdhani", sans-serif;
+                                                                                         font-size: 1.1rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.registration-team-name { margin: 0 0 1.5rem; color: var(--color-text); font-family: "Barlow Condensed", sans-serif;
+                                                                                                        font-size: 5rem; font-style: italic; font-weight: 900; letter-spacing: 0;
+                                                                                                        line-height: 1; text-transform: uppercase;
+                                                                                                        text-shadow: 0.08em 0.08em 0 #ff001b, 0.14em 0.14em 0 #123cff;
+                                                                                                        overflow-wrap: anywhere; }
+.registration-frame .separator { margin: 0 0 1.5rem; background: linear-gradient(90deg, #2349ed, #6836dd, #c41d51); }
+.registration-copy { margin: 0; color: #c5cce4; font-family: "Inter", sans-serif; font-size: 1.25rem; line-height: 1.55; }
+.registration-start { margin-top: 0.75rem; }
+@media (max-width: 40rem) {
+        .registration-frame { padding: 1.25rem; }
+        .registration-kicker { margin-bottom: 2rem; }
+        .registration-team-name { font-size: 3.5rem; }
+}
 .separator { border: 0; height: 2px; margin: 1rem 0; background: var(--color-purple); }
 
 /* Brand: the title image, the skyline, and the smaller title used in the game. */
@@ -77,6 +109,12 @@ button:disabled, .btn:disabled { opacity: 0.6; }
 .brand-title-left { width: 60vw; max-width: 24rem; margin: 0 0 1rem; }
 .skyline { display: block; width: 100%; height: auto; margin: 0.5rem 0 1rem; }
 .game-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+.game-header-going { position: relative; justify-content: space-between; margin: -1rem -1rem 1rem;
+                     padding: 2rem 1rem; background: var(--color-header-bg); }
+.game-header-going::after { position: absolute; right: 0; bottom: 0; left: 0; height: 4px;
+                            background: var(--gradient-confirm); content: ""; }
+.game-header-going .brand-small { width: min(60%, 20rem); }
+.game-header-going .team-tag { margin-left: auto; }
 .game-header h1 { margin: 0; font-size: 1.4rem; }
 .brand-small { flex: none; width: 4.5rem; height: auto; }
 
