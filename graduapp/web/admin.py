@@ -249,14 +249,18 @@ def events_csv():
     team_id = request.args.get("team") or None
     names = {t.id: t.name for t in repo.list_teams(conn)}
     labels, challenges = repo.step_labels(conn), repo.all_challenge_texts(conn)
-    events = reversed(repo.list_events_page(conn, team_id, None, limit=-1))
+    events = list(reversed(repo.list_events_page(conn, team_id, None, limit=-1)))
+    points = {}
+    for tid in {e.team_id for e in events}:
+        points.update(repo.score_timeline(conn, tid))
     return _csv(
         "events.csv",
-        ["id", "time", "team_id", "team", "type", "description", "payload"],
+        ["id", "time", "team_id", "team", "type", "description", "team_points", "payload"],
         (
             [
                 e.id, local(e.ts), e.team_id, names.get(e.team_id, ""), e.type,
-                _describe(e, labels, challenges), json.dumps(e.payload, ensure_ascii=False),
+                _describe(e, labels, challenges), points.get(e.id, ""),
+                json.dumps(e.payload, ensure_ascii=False),
             ]
             for e in events
         ),

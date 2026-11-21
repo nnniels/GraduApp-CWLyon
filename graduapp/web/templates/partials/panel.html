@@ -28,5 +28,6 @@
       {% else %}{% include "partials/phase_end.html" %}
       {% endif %}
     {% endif %}
+    {% if admin_enabled %}<p class="admin-link"><a href="{{ url_for('admin.login') }}" aria-label="Organiser">&#9881;</a></p>{% endif %}
   {% endif %}
 </section>

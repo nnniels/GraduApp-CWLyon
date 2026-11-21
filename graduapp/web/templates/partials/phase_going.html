@@ -1,12 +1,18 @@
-<div class="instruction going">
-{% if step.get_there %}<h2>{{ step.get_there }}</h2>{% else %}<h2>Go to this location</h2>{% endif %}
+<div class="going">
+<h2 class="going-title">Go to this location</h2>
 {% if location.kind == 'text' %}
   <p class="location">{{ location.text }}</p>
 {% elif location.kind == 'maps_link' %}
   {% if location.label %}<p class="location">{{ location.label }}</p>{% endif %}
-  <a class="btn" href="{{ location.url }}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
 {% elif location.kind == 'minimap' %}
   {% if location.label %}<p class="location">{{ location.label }}</p>{% endif %}
+{% endif %}
+{% if step.get_there %}
+  <p class="get-there">{{ step.get_there }}</p>
+{% endif %}
+{% if location.kind == 'maps_link' %}
+  <a class="btn" href="{{ location.url }}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+{% elif location.kind == 'minimap' %}
   <iframe class="minimap" src="{{ location.embed }}" title="Map" loading="lazy" referrerpolicy="no-referrer"
           sandbox="allow-scripts allow-same-origin"></iframe>
   <a class="btn" href="{{ location.link }}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>

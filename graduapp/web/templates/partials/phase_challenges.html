@@ -1,6 +1,7 @@
 <h2>Challenges</h2>
 <p>Complete {{ k }} of the {{ challenges|length }} challenges before time runs out
   ({{ ticked_count }} / {{ k }} done).</p>
+{% include "partials/timer.html" %}
 <ul class="challenges">
   {% for c in challenges %}
   <li>
@@ -12,4 +13,3 @@
   </li>
   {% endfor %}
 </ul>
-{% include "partials/timer.html" %}

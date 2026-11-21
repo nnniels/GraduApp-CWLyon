@@ -63,6 +63,7 @@ class TeamView:
 class ChallengeInfo:
     id: str
     text: str
+    points: int = 0
 
 
 @dataclass(frozen=True)
@@ -280,11 +281,11 @@ def list_general_challenges(
 ) -> list[ChallengeInfo]:
     """The given general challenges, in the order the author wrote them."""
     rows = conn.execute(
-        "SELECT id, text FROM challenge WHERE scope = 'general' "
+        "SELECT id, text, points FROM challenge WHERE scope = 'general' "
         "AND id IN (SELECT value FROM json_each(?)) ORDER BY position",
         (json.dumps(sorted(ids)),),
     )
-    return [ChallengeInfo(r["id"], r["text"]) for r in rows]
+    return [ChallengeInfo(r["id"], r["text"], r["points"]) for r in rows]
 
 
 def get_seen_general(conn: sqlite3.Connection, team_id: str) -> frozenset[str]:
@@ -476,6 +477,21 @@ def load_events(conn: sqlite3.Connection, team_id: str) -> list[Event]:
 def get_score(conn: sqlite3.Connection, team_id: str) -> Score:
     team = _team_row(conn, team_id)
     return compute_score(load_events(conn, team_id), load_course(conn, team["itinerary_id"]))
+
+
+def score_timeline(conn: sqlite3.Connection, team_id: str) -> dict[int, int]:
+    """The team's total points right after each of its events, keyed by event id."""
+    try:
+        course = load_course(conn, _team_row(conn, team_id)["itinerary_id"])
+    except UnknownTeam:
+        return {}
+    seen: list[Event] = []
+    timeline: dict[int, int] = {}
+    rows = conn.execute("SELECT * FROM event WHERE team_id = ? ORDER BY id", (team_id,))
+    for r in rows:
+        seen.append(Event(r["type"], json.loads(r["payload_json"]), _parse(r["ts"])))
+        timeline[r["id"]] = compute_score(seen, course).total
+    return timeline
 
 
 # Organiser view. Read-only, and it deliberately exposes validation and join codes:
