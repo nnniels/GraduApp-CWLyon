@@ -161,10 +161,15 @@ th, td { text-align: left; vertical-align: top; padding: 0.4rem 0.6rem; border-b
 .challenge-text { flex: 1; min-width: 0; }
 .challenge.ticked { border-color: #43d5a5; box-shadow: 0 0.25rem 0 #16785f; }
 .challenge.readonly { cursor: default; }
+
 .challenge .tick { flex: none; margin: 0; color: #43d5a5; font-weight: 900; }
 .challenge .new { flex: none; margin: 0 0 0 auto; padding: 0.25rem 0.55rem; border-radius: 0.2rem;
                    font-family: var(--font-text); font-size: 0.9rem; font-weight: 700; letter-spacing: 0;
                    background: var(--color-gold); color: #102044; }
+.points { float: right; margin-left: 0.5rem; padding: 0.05rem 0.45rem; border-radius: var(--radius);
+          font-family: var(--font-display); font-size: 0.8rem; font-weight: var(--font-weight-bold);
+          letter-spacing: 0.04em; white-space: nowrap; color: var(--color-text);
+          background: var(--color-surface-deep); border: 1px solid var(--color-edge); }
 /* The team name in a small dark box, with the team colour on its edges. */
 .team-tag { display: inline-block; padding: 0.3rem 0.75rem; font-family: var(--font-display);
             font-size: 1rem; font-weight: var(--font-weight-bold); letter-spacing: 0.06em;
