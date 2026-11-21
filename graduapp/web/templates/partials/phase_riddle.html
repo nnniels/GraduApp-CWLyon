@@ -1,4 +1,4 @@
-<div class="instruction">
+<div class="instruction riddle-screen">
 <h2>{{ step.riddle_title or 'Riddle' }}</h2>
 <p class="riddle">{{ step.riddle_text }}</p>
 {% if step.riddle_image %}
@@ -10,5 +10,5 @@
   <label>Your answer
     <textarea name="text" rows="3" maxlength="1000" required></textarea>
   </label>
-  <button type="submit" class="btn-accent">Submit answer</button>
+  <button type="submit" class="btn-accent riddle-submit">Submit answer</button>
 </form>
